@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASUS Router App — Demo</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, 'SF Pro Display', sans-serif;
+  background: #f2f4f7;
+  min-height: 100vh;
+  display: flex; flex-direction: column; align-items: center;
+  padding: 48px 20px 64px;
+}
+.header { text-align: center; margin-bottom: 48px; }
+.logo {
+  font-size: 22px; font-weight: 900; color: #0066cc;
+  letter-spacing: 2px; margin-bottom: 8px;
+}
+.subtitle { font-size: 14px; color: #8a96a4; }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  width: 100%; max-width: 960px;
+}
+
+.demo-card {
+  background: #fff;
+  border: 0.5px solid #e0e4ea;
+  border-radius: 20px;
+  padding: 28px 24px;
+  text-decoration: none;
+  color: inherit;
+  transition: transform .2s, box-shadow .2s;
+  display: flex; flex-direction: column; gap: 14px;
+}
+.demo-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.08);
+}
+
+.card-icon {
+  width: 48px; height: 48px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px;
+}
+.card-icon.blue  { background: #e8f0fb; color: #0066cc; }
+.card-icon.green { background: #e8f8ee; color: #1a8a38; }
+.card-icon.red   { background: #fff0f0; color: #cc0000; }
+
+.card-num {
+  font-size: 11px; font-weight: 700; color: #aab4c0;
+  letter-spacing: .6px; text-transform: uppercase;
+}
+.card-title { font-size: 18px; font-weight: 700; color: #111; line-height: 1.3; }
+.card-desc  { font-size: 13px; color: #6a7888; line-height: 1.6; }
+
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.tag {
+  font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 20px;
+}
+.tag.blue  { background: #e8f0fb; color: #0055aa; }
+.tag.green { background: #e8f8ee; color: #166534; }
+.tag.red   { background: #fff0f0; color: #991b1b; }
+.tag.purple{ background: #f3f0ff; color: #5b21b6; }
+
+.arrow {
+  margin-top: auto; padding-top: 12px;
+  font-size: 13px; font-weight: 600; color: #0066cc;
+  display: flex; align-items: center; gap: 4px;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">ASUS</div>
+  <div style="font-size:17px;font-weight:700;color:#111;margin-bottom:6px">Router App — UI Demo</div>
+  <div class="subtitle">Select a demo to preview</div>
+</div>
+
+<div class="grid">
+
+  <a class="demo-card" href="asus_light.html">
+    <div class="card-icon blue"><i class="ti ti-layout-dashboard"></i></div>
+    <div>
+      <div class="card-num">Demo 01</div>
+      <div class="card-title">Pro / Standard<br>Mode Switch</div>
+    </div>
+    <div class="card-desc">右上角 Switch 切換簡潔模式與專業模式，展示資訊密度與 UI 彈性。</div>
+    <div class="tags">
+      <span class="tag blue">Standard</span>
+      <span class="tag blue">Pro Mode</span>
+      <span class="tag blue">Toggle</span>
+    </div>
+    <div class="arrow">View Demo <i class="ti ti-arrow-right"></i></div>
+  </a>
+
+  <a class="demo-card" href="asus_customize.html">
+    <div class="card-icon green"><i class="ti ti-adjustments"></i></div>
+    <div>
+      <div class="card-num">Demo 02</div>
+      <div class="card-title">模組化個人化<br>Dashboard</div>
+    </div>
+    <div class="card-desc">右上角 Edit 進入編輯模式，可自由新增或刪除功能模組，打造專屬首頁。</div>
+    <div class="tags">
+      <span class="tag green">Customize</span>
+      <span class="tag green">Edit Mode</span>
+      <span class="tag green">Modules</span>
+    </div>
+    <div class="arrow">View Demo <i class="ti ti-arrow-right"></i></div>
+  </a>
+
+  <a class="demo-card" href="asus_ai_v3.html">
+    <div class="card-icon red"><i class="ti ti-brain"></i></div>
+    <div>
+      <div class="card-num">Demo 03</div>
+      <div class="card-title">AI 智慧分析<br>自動佈局</div>
+    </div>
+    <div class="card-desc">AI 偵測遊戲行為，2 秒後彈出建議，確認後自動切換為玩家專屬頁面。</div>
+    <div class="tags">
+      <span class="tag red">AI Insight</span>
+      <span class="tag purple">Gamer Mode</span>
+      <span class="tag red">QoS</span>
+      <span class="tag purple">Auto Layout</span>
+    </div>
+    <div class="arrow">View Demo <i class="ti ti-arrow-right"></i></div>
+  </a>
+
+</div>
+
+</body>
+</html>
