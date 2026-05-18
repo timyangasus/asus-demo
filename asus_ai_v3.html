@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASUS Router — AI Customize</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  height: 100%; width: 100%;
+  background: #ffffff;
+  display: flex; justify-content: center; align-items: flex-start;
+  padding: 20px 0 20px;
+  min-height: 100vh;
+}
+
+/* ── Phone Shell ── */
+.phone-shell {
+  width: 393px; height: 852px;
+  background: #f2f4f7;
+  border-radius: 54px;
+  border: 10px solid #1a1a1a;
+  position: relative; overflow: hidden;
+  box-shadow: 0 0 0 1px #2a2a2a, 0 0 0 12px #111, 0 0 0 13px #444, 0 40px 80px rgba(0,0,0,0.28);
+  display: flex; flex-direction: column;
+}
+.phone-shell::before {
+  content: ''; position: absolute; left: -14px; top: 120px;
+  width: 4px; height: 36px; background: #333; border-radius: 2px 0 0 2px;
+  box-shadow: 0 52px 0 #333, 0 100px 0 #333;
+}
+.phone-shell::after {
+  content: ''; position: absolute; right: -14px; top: 160px;
+  width: 4px; height: 68px; background: #333; border-radius: 0 2px 2px 0;
+}
+.dynamic-island {
+  position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
+  width: 126px; height: 37px; background: #000; border-radius: 20px; z-index: 200;
+  display: flex; align-items: center; justify-content: flex-end; padding-right: 12px; gap: 6px;
+}
+.di-cam { width: 12px; height: 12px; border-radius: 50%; background: #1a1a1a; border: 2px solid #2a2a2a; }
+.di-dot { width: 8px; height: 8px; border-radius: 50%; background: #0a3a1a; }
+
+/* ── Status bar ── */
+.status-bar {
+  padding: 56px 26px 8px; display: flex; justify-content: space-between; align-items: center;
+  flex-shrink: 0; transition: background .4s;
+}
+.sb-time { font-size: 16px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.sb-icons { display: flex; align-items: center; gap: 5px; }
+.sb-icons i { font-size: 16px; }
+.battery { width: 26px; height: 13px; border: 1.5px solid; border-radius: 3px; position: relative; margin-left: 2px; }
+.battery::after { content: ''; position: absolute; right: -5px; top: 50%; transform: translateY(-50%); width: 3px; height: 6px; border-radius: 0 1px 1px 0; }
+.battery-fill { position: absolute; left: 1.5px; top: 1.5px; bottom: 1.5px; width: 80%; border-radius: 1.5px; }
+
+/* ── Top bar ── */
+.topbar {
+  padding: 4px 20px 12px; display: flex; justify-content: space-between; align-items: center;
+  border-bottom: 0.5px solid; flex-shrink: 0; transition: background .4s, border-color .4s;
+}
+.tp-left { display: flex; align-items: center; gap: 10px; }
+.tp-badge {
+  width: 24px; height: 24px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; transition: background .4s, border-color .4s;
+}
+.tp-badge i { font-size: 12px; }
+.tp-title { font-size: 18px; font-weight: 700; transition: color .4s; }
+.edit-btn { font-size: 14px; font-weight: 600; background: none; border: none; cursor: pointer; padding: 4px 0; transition: color .4s; }
+
+/* ── Light theme ── */
+.light .status-bar { background: #fff; color: #111; }
+.light .sb-time { color: #111; }
+.light .sb-icons i { color: #111; }
+.light .battery { border-color: #111; }
+.light .battery::after { background: #111; }
+.light .battery-fill { background: #111; }
+.light .topbar { background: #fff; border-color: #e0e4ea; }
+.light .tp-badge { background: #e6f9ee; border: 1.5px solid #34c759; }
+.light .tp-badge i { color: #1a8a38; }
+.light .tp-title { color: #111; }
+.light .edit-btn { color: #0066cc; }
+.light .scroll { background: #f2f4f7; }
+.light .card { background: #fff; border-color: #e0e4ea; }
+.light .bottom-nav { background: #fff; border-color: #e0e4ea; }
+.light .nav-item { color: #aab4c0; }
+.light .nav-item.active { color: #0066cc; }
+
+/* ── Dark/Gaming theme ── */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ── Scroll ── */
+.scroll {
+  flex: 1; padding: 12px 14px 8px;
+  display: flex; flex-direction: column; gap: 10px;
+  overflow-y: auto; -webkit-overflow-scrolling: touch; transition: background .4s;
+}
+.scroll::-webkit-scrollbar { display: none; }
+
+/* ── Cards ── */
+.card {
+  border-radius: 16px; padding: 14px 16px;
+  border: 0.5px solid; transition: background .4s, border-color .4s;
+}
+
+/* ── Bottom Nav ── */
+.bottom-nav {
+  flex-shrink: 0; border-top: 0.5px solid;
+  padding: 10px 0 28px; display: flex; justify-content: space-around; align-items: flex-start;
+  transition: background .4s, border-color .4s;
+}
+.nav-item {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  font-size: 10px; font-weight: 500; cursor: pointer; flex: 1; transition: color .3s;
+}
+.nav-item i { font-size: 24px; }
+.nav-badge-wrap { position: relative; }
+.nav-badge {
+  position: absolute; top: -3px; right: -7px;
+  background: #e53935; color: #fff; font-size: 9px; font-weight: 700;
+  width: 14px; height: 14px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* ─────────────────────────────────────────
+   LIGHT CONTENT STYLES
+───────────────────────────────────────── */
+.hero-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+.hero-sub { font-size: 11px; color: #8a96a4; margin-bottom: 2px; }
+.hero-name { font-size: 16px; font-weight: 800; }
+.online-pill {
+  font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 20px; letter-spacing: .4px;
+}
+.online-pill.green { background: #e8f8ee; border: 1px solid #34c759; color: #1a8a38; }
+.conn-row { display: flex; align-items: center; margin: 12px 0 14px; }
+.c-node { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.c-icon {
+  width: 38px; height: 38px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center; font-size: 18px;
+}
+.light .c-icon { background: #f0f4f8; border: 0.5px solid #dde3ec; color: #666; }
+.light .c-icon.g { color: #1a8a38; background: #eaf8ef; border-color: #b8e8c8; }
+.light .c-icon.b { color: #0066cc; background: #e8f0fb; border-color: #b8d0f0; }
+.c-lbl { font-size: 9px; color: #8a96a4; }
+.c-line { flex: 1; border-top: 1px dashed #dde3ec; margin-bottom: 14px; }
+.stats-row { display: grid; grid-template-columns: repeat(3,1fr); border-top: .5px solid #eaeef3; padding-top: 12px; }
+.st { text-align: center; }
+.st-val { font-size: 16px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.st-key { font-size: 10px; color: #8a96a4; margin-top: 2px; }
+.score-wrap { display: flex; align-items: center; }
+.score-num { font-size: 40px; font-weight: 800; color: #00a878; line-height: 1; }
+.score-info { margin-left: 12px; flex: 1; }
+.score-grade { font-size: 16px; font-weight: 700; color: #00a878; }
+.score-desc { font-size: 11px; color: #8a96a4; margin-top: 2px; }
+.wifi-row { display: flex; align-items: center; justify-content: space-between; }
+.wc-left { display: flex; align-items: center; gap: 10px; }
+.wc-name { font-size: 13px; font-weight: 700; }
+.wc-sub { font-size: 11px; color: #8a96a4; margin-top: 2px; }
+.wc-num { font-size: 22px; font-weight: 800; text-align: right; }
+.wc-key { font-size: 10px; color: #8a96a4; text-align: right; }
+.act-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.act-btn {
+  background: #f5f7fa; border: .5px solid #e0e4ea; border-radius: 12px;
+  padding: 11px 13px; display: flex; align-items: center; gap: 9px;
+}
+.act-label { font-size: 12px; font-weight: 500; color: #333; }
+
+/* ─────────────────────────────────────────
+   AI SHEET OVERLAY
+───────────────────────────────────────── */
+.sheet-overlay {
+  position: absolute; inset: 0; z-index: 150;
+  background: rgba(0,0,0,0); pointer-events: none;
+  transition: background .3s;
+}
+.sheet-overlay.visible { background: rgba(0,0,0,0.45); pointer-events: all; }
+
+.ai-sheet {
+  position: absolute; bottom: -100%; left: 0; right: 0;
+  background: #fff; border-radius: 24px 24px 0 0;
+  padding: 0 0 32px;
+  transition: bottom .4s cubic-bezier(.32,1,.28,1);
+  box-shadow: 0 -8px 40px rgba(0,0,0,0.15);
+}
+.sheet-overlay.visible .ai-sheet { bottom: 0; }
+
+.sheet-handle {
+  width: 36px; height: 4px; background: #dde3ec; border-radius: 2px;
+  margin: 12px auto 16px;
+}
+.sheet-header {
+  padding: 0 20px 12px;
+  display: flex; align-items: flex-start; gap: 12px;
+  border-bottom: 0.5px solid #eaeef3;
+}
+.ai-avatar {
+  width: 40px; height: 40px; border-radius: 12px; flex-shrink: 0;
+  background: linear-gradient(135deg, #cc0000 0%, #0066cc 100%);
+  display: flex; align-items: center; justify-content: center;
+}
+.ai-avatar i { font-size: 22px; color: #fff; }
+.ai-tag { font-size: 10px; font-weight: 700; color: #cc0000; letter-spacing: .5px; margin-bottom: 3px; }
+.ai-headline { font-size: 14px; font-weight: 700; color: #111; line-height: 1.35; }
+
+.ai-body { padding: 14px 20px 16px; }
+.ai-desc {
+  font-size: 13px; color: #444; line-height: 1.65;
+  background: #f7f5ff; border-left: 3px solid #cc0000;
+  border-radius: 0 10px 10px 0; padding: 10px 14px; margin-bottom: 14px;
+}
+.ai-desc b { color: #111; font-weight: 700; }
+.ai-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+.ai-chip {
+  font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px;
+  display: flex; align-items: center; gap: 4px;
+}
+.ai-chip.red    { background: #fff0f0; color: #cc0000; }
+.ai-chip.blue   { background: #e8f0fb; color: #0055aa; }
+.ai-chip.green  { background: #e8f8ee; color: #166534; }
+
+.sheet-actions { display: flex; gap: 10px; padding: 0 20px; }
+.btn-cancel {
+  flex: 1; padding: 13px; border-radius: 14px; font-size: 14px; font-weight: 600;
+  background: #f2f4f7; border: none; color: #666; cursor: pointer;
+}
+.btn-confirm {
+  flex: 2; padding: 13px; border-radius: 14px; font-size: 14px; font-weight: 700;
+  background: linear-gradient(135deg, #cc0000 0%, #e53935 100%);
+  border: none; color: #fff; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.btn-confirm i { font-size: 16px; }
+
+/* ─────────────────────────────────────────
+   LOADING OVERLAY
+───────────────────────────────────────── */
+.loading-overlay {
+  position: absolute; inset: 0; z-index: 160;
+  background: #1a0000;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;
+  opacity: 0; pointer-events: none; transition: opacity .35s;
+}
+.loading-overlay.visible { opacity: 1; pointer-events: all; }
+
+.loading-logo {
+  width: 64px; height: 64px; border-radius: 18px;
+  background: linear-gradient(135deg, #cc0000 0%, #e53935 100%);
+  display: flex; align-items: center; justify-content: center;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+.loading-logo i { font-size: 34px; color: #fff; }
+.loading-title { font-size: 17px; font-weight: 700; color: #ffe8e8; }
+.loading-sub { font-size: 12px; color: #8a6060; text-align: center; line-height: 1.6; padding: 0 32px; }
+.loading-bar-wrap { width: 200px; height: 4px; background: #2a1010; border-radius: 2px; overflow: hidden; }
+.loading-bar { height: 100%; width: 0%; background: linear-gradient(90deg, #cc0000, #06b6d4); border-radius: 2px; transition: width .05s linear; }
+.loading-dots { display: flex; gap: 6px; }
+.loading-dot {
+  width: 6px; height: 6px; border-radius: 50%; background: #cc0000;
+  animation: blink 1.2s ease-in-out infinite;
+}
+.loading-dot:nth-child(2) { animation-delay: .2s; }
+.loading-dot:nth-child(3) { animation-delay: .4s; }
+
+@keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.08)} }
+@keyframes blink { 0%,100%{opacity:.2} 50%{opacity:1} }
+
+/* ─────────────────────────────────────────
+   GAMING PAGE STYLES
+───────────────────────────────────────── */
+
+
+
+
+
+
+
+
+
+
+.gcard { background: #fff; border: 0.5px solid #e0e4ea; border-radius: 16px; padding: 14px 16px; }
+.gcard-accent { border-color: #ffcccc; background: #fff5f5; }
+
+.g-section-lbl {
+  font-size: 10px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase;
+  color: #8a96a4; padding: 0 2px; margin-bottom: -2px;
+}
+
+/* Ping meter */
+.ping-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+.ping-val { font-size: 36px; font-weight: 800; color: #1a8a38; font-variant-numeric: tabular-nums; line-height: 1; }
+.ping-unit { font-size: 13px; color: #8a6060; font-weight: 500; }
+.ping-status { font-size: 11px; font-weight: 700; color: #1a8a38; background: #e8f8ee; border: 0.5px solid #34c759; padding: 3px 10px; border-radius: 20px; }
+.ping-bar-row { display: flex; gap: 3px; align-items: flex-end; height: 28px; margin-bottom: 6px; }
+.ping-bar-item { flex: 1; border-radius: 2px 2px 0 0; }
+.ping-sub { font-size: 10px; color: #8a96a4; }
+
+/* QoS table */
+.qos-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: .5px solid #2a1010; }
+.qos-row:last-child { border-bottom: none; padding-bottom: 0; }
+.qos-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0; }
+.qos-name { font-size: 12px; font-weight: 600; color: #222; flex: 1; }
+.qos-port { font-size: 10px; color: #8a96a4; }
+.qos-priority {
+  font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px;
+}
+.qos-priority.high   { background: #fff0f0; color: #cc0000; border: 0.5px solid #ffaaaa; }
+.qos-priority.medium { background: #e8f0fb; color: #0055aa; border: 0.5px solid #b8d0f0; }
+
+/* Speed gauge */
+.speed-row { display: flex; gap: 10px; }
+.speed-box { flex: 1; background: #fff; border: 0.5px solid #e0e4ea; border-radius: 12px; padding: 10px 12px; }
+.speed-label { font-size: 10px; color: #8a96a4; margin-bottom: 4px; display: flex; align-items: center; gap: 4px; }
+.speed-label i { font-size: 13px; }
+.speed-val { font-size: 20px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.speed-val.up { color: #60a5fa; }
+.speed-val.dn { color: #34d399; }
+.speed-unit { font-size: 10px; color: #8a96a4; margin-top: 2px; }
+.speed-bar-bg { height: 3px; background: #eaeef3; border-radius: 2px; overflow: hidden; margin-top: 6px; }
+.speed-bar-fill { height: 100%; border-radius: 2px; }
+
+/* Device priority list */
+.dev-row { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-bottom: .5px solid #2a1010; }
+.dev-row:last-child { border-bottom: none; padding-bottom: 0; }
+.dev-rank { width: 20px; text-align: center; font-size: 12px; font-weight: 800; color: #8a96a4; }
+.dev-rank.top { color: #cc0000; }
+.dev-icon { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+.dev-name { font-size: 12px; font-weight: 600; color: #222; flex: 1; }
+.dev-bw { font-size: 11px; font-weight: 700; color: #cc0000; font-variant-numeric: tabular-nums; }
+
+/* WiFi band badge */
+.band-badge { display: flex; gap: 6px; }
+.bbadge { font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 20px; }
+.bbadge.on { background: #fff0f0; color: #cc0000; border: 0.5px solid #ffaaaa; }
+.bbadge.off { background: #f5f7fa; color: #aab4c0; border: 0.5px solid #e0e4ea; }
+
+/* AI badge */
+.ai-badge-inline {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px;
+  background: #fff0f0; color: #cc0000; border: 0.5px solid #ffaaaa;
+}
+.ai-badge-inline i { font-size: 11px; }
+
+/* two col */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+</style>
+</head>
+<body>
+<div class="phone-shell light" id="shell">
+  <div class="dynamic-island"><div class="di-dot"></div><div class="di-cam"></div></div>
+
+  <!-- Status bar -->
+  <div class="status-bar">
+    <span class="sb-time">9:41</span>
+    <div class="sb-icons">
+      <i class="ti ti-signal-4g"></i><i class="ti ti-wifi"></i>
+      <div class="battery"><div class="battery-fill"></div></div>
+    </div>
+  </div>
+
+  <!-- Top bar -->
+  <div class="topbar">
+    <div class="tp-left">
+      <div class="tp-badge"><i class="ti ti-check" id="topIcon"></i></div>
+      <span class="tp-title" id="topTitle">My Wi-Fi</span>
+    </div>
+    <button class="edit-btn" id="editBtn">Edit</button>
+  </div>
+
+  <!-- ── NORMAL SCROLL (light page) ── -->
+  <div class="scroll" id="normalScroll">
+    <div class="card">
+      <div class="hero-header">
+        <div><div class="hero-sub">ZenWiFi Pro ET12</div><div class="hero-name">asus_5G_network</div></div>
+        <div class="online-pill green">ONLINE</div>
+      </div>
+      <div class="conn-row">
+        <div class="c-node"><div class="c-icon g"><i class="ti ti-world"></i></div><div class="c-lbl">Internet</div></div>
+        <div class="c-line"></div>
+        <div class="c-node"><div class="c-icon b"><i class="ti ti-router"></i></div><div class="c-lbl">Router</div></div>
+        <div class="c-line"></div>
+        <div class="c-node"><div class="c-icon g"><i class="ti ti-device-laptop"></i></div><div class="c-lbl">Devices</div></div>
+      </div>
+      <div class="stats-row">
+        <div class="st"><div class="st-val">24</div><div class="st-key">Devices</div></div>
+        <div class="st"><div class="st-val" style="color:#0066cc">1.1.1.1</div><div class="st-key">DNS</div></div>
+        <div class="st"><div class="st-val">99.9%</div><div class="st-key">Uptime</div></div>
+      </div>
+    </div>
+    <div class="card score-wrap">
+      <div class="score-num">92</div>
+      <div class="score-info"><div class="score-grade">Good</div><div class="score-desc">Your network is running smoothly</div></div>
+      <i class="ti ti-chevron-right" style="font-size:20px;color:#ccd3dc"></i>
+    </div>
+    <div class="card wifi-row">
+      <div class="wc-left">
+        <i class="ti ti-wifi" style="font-size:24px;color:#0066cc"></i>
+        <div><div class="wc-name">asus_5G_network</div><div class="wc-sub">5 GHz · WPA3</div></div>
+      </div>
+      <div><div class="wc-num">24</div><div class="wc-key">devices</div></div>
+    </div>
+    <div class="card">
+      <div style="font-size:13px;font-weight:700;color:#111;margin-bottom:10px;display:flex;align-items:center;gap:6px">
+        <i class="ti ti-bolt" style="font-size:16px;color:#0066cc"></i>Quick Actions
+      </div>
+      <div class="act-grid">
+        <div class="act-btn"><i class="ti ti-refresh" style="font-size:20px;color:#1a8a38"></i><span class="act-label">Restart</span></div>
+        <div class="act-btn"><i class="ti ti-stethoscope" style="font-size:20px;color:#0066cc"></i><span class="act-label">Diagnostics</span></div>
+        <div class="act-btn"><i class="ti ti-wifi-off" style="font-size:20px;color:#e07b00"></i><span class="act-label">Disable WiFi</span></div>
+        <div class="act-btn"><i class="ti ti-settings" style="font-size:20px;color:#0066cc"></i><span class="act-label">Optimize</span></div>
+      </div>
+    </div>
+    <div style="height:40px"></div>
+  </div>
+
+  <!-- ── GAMING SCROLL ── -->
+  <div class="scroll" id="gamingScroll" style="display:none;background:linear-gradient(160deg,#e8eaff 0%,#dce8ff 30%,#ecdcff 65%,#ffdce8 100%);padding-bottom:8px">
+
+    <!-- 1. AiMesh Topology -->
+    <div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#8878b0;padding:0 2px;margin-bottom:-2px">AiMesh Topology</div>
+    <div style="background:rgba(255,255,255,0.55);border:0.5px solid rgba(160,130,255,0.25);border-radius:16px;padding:14px 16px;backdrop-filter:blur(12px)">
+      <svg width="100%" viewBox="0 0 330 128" xmlns="http://www.w3.org/2000/svg">
+        <!-- edges purple dashed -->
+        <line x1="165" y1="38" x2="60" y2="38" stroke="rgba(140,100,240,0.45)" stroke-width="1.5" stroke-dasharray="5 3"/>
+        <line x1="165" y1="38" x2="270" y2="38" stroke="rgba(140,100,240,0.45)" stroke-width="1.5" stroke-dasharray="5 3"/>
+        <line x1="152" y1="52" x2="66" y2="98" stroke="rgba(140,100,240,0.45)" stroke-width="1.5" stroke-dasharray="5 3"/>
+        <line x1="178" y1="52" x2="264" y2="98" stroke="rgba(140,100,240,0.45)" stroke-width="1.5" stroke-dasharray="5 3"/>
+        <!-- Internet - blue -->
+        <rect x="16" y="16" width="44" height="44" rx="11" fill="rgba(100,160,255,0.18)" stroke="rgba(80,140,255,0.5)" stroke-width="1.2"/>
+        <text x="38" y="44" text-anchor="middle" font-size="24" fill="#4d8fff">⊕</text>
+        <text x="38" y="72" text-anchor="middle" font-size="9" fill="#8878b0" font-family="sans-serif">Internet</text>
+        <!-- Main Router - red/pink -->
+        <rect x="133" y="12" width="52" height="52" rx="13" fill="rgba(255,80,100,0.15)" stroke="#ff3355" stroke-width="2"/>
+        <rect x="144" y="31" width="30" height="14" rx="3" fill="rgba(255,80,100,0.2)" stroke="#ff3355" stroke-width=".8"/>
+        <circle cx="151" cy="38" r="2.5" fill="#22cc66"/>
+        <circle cx="159" cy="38" r="2.5" fill="#ff3355"/>
+        <circle cx="167" cy="38" r="2.5" fill="#ff3355" opacity=".35"/>
+        <line x1="148" y1="31" x2="144" y2="20" stroke="rgba(140,100,240,0.5)" stroke-width="1.8" stroke-linecap="round"/>
+        <line x1="159" y1="29" x2="159" y2="16" stroke="#ff3355" stroke-width="1.8" stroke-linecap="round" opacity=".9"/>
+        <line x1="170" y1="31" x2="174" y2="20" stroke="rgba(140,100,240,0.5)" stroke-width="1.8" stroke-linecap="round"/>
+        <path d="M150 26 Q159 20 168 26" stroke="#ff3355" stroke-width="1.2" fill="none" stroke-linecap="round" opacity=".7"/>
+        <text x="159" y="78" text-anchor="middle" font-size="9" fill="#ff3355" font-family="sans-serif" font-weight="700">Main Router</text>
+        <!-- Devices - purple -->
+        <rect x="270" y="16" width="44" height="44" rx="11" fill="rgba(140,120,220,0.15)" stroke="rgba(140,100,220,0.4)" stroke-width="1.2"/>
+        <rect x="281" y="27" width="22" height="14" rx="3" fill="rgba(140,120,220,0.2)" stroke="rgba(140,100,220,0.3)" stroke-width=".8"/>
+        <line x1="292" y1="41" x2="292" y2="46" stroke="rgba(140,100,220,0.5)" stroke-width="1.5"/>
+        <line x1="285" y1="46" x2="299" y2="46" stroke="rgba(140,100,220,0.5)" stroke-width="1.5"/>
+        <text x="292" y="72" text-anchor="middle" font-size="9" fill="#8878b0" font-family="sans-serif">Devices</text>
+        <!-- Living Room - blue/purple -->
+        <rect x="38" y="90" width="48" height="28" rx="9" fill="rgba(140,160,255,0.18)" stroke="rgba(120,140,240,0.4)" stroke-width="1.2"/>
+        <circle cx="51" cy="104" r="2.5" fill="#22cc66"/>
+        <circle cx="61" cy="104" r="2.5" fill="#8878cc" opacity=".6"/>
+        <rect x="67" y="94" width="3" height="4" rx=".5" fill="#22cc66"/>
+        <rect x="72" y="92" width="3" height="6" rx=".5" fill="#22cc66"/>
+        <rect x="77" y="90" width="3" height="8" rx=".5" fill="#22cc66"/>
+        <text x="62" y="128" text-anchor="middle" font-size="8.5" fill="#8878b0" font-family="sans-serif">Living Room</text>
+        <!-- Bedroom - pink -->
+        <rect x="248" y="90" width="48" height="28" rx="9" fill="rgba(255,160,180,0.2)" stroke="rgba(240,120,140,0.45)" stroke-width="1.2"/>
+        <circle cx="261" cy="104" r="2.5" fill="#e07b00"/>
+        <circle cx="271" cy="104" r="2.5" fill="rgba(200,140,200,0.4)"/>
+        <rect x="277" y="94" width="3" height="4" rx=".5" fill="#e07b00"/>
+        <rect x="282" y="92" width="3" height="6" rx=".5" fill="rgba(200,140,200,0.4)"/>
+        <rect x="287" y="90" width="3" height="8" rx=".5" fill="rgba(200,140,200,0.4)"/>
+        <text x="272" y="128" text-anchor="middle" font-size="8.5" fill="#8878b0" font-family="sans-serif">Bedroom</text>
+      </svg>
+    </div>
+
+    <!-- 2. Big 3-col numbers -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+      <div style="background:rgba(255,255,255,0.55);border:0.5px solid rgba(255,60,90,0.3);border-radius:16px;padding:18px 10px;text-align:center;backdrop-filter:blur(8px)">
+        <div style="font-size:10px;color:#8878b0;margin-bottom:8px">Ping</div>
+        <div style="font-size:36px;font-weight:800;color:#ff3355;line-height:1;font-variant-numeric:tabular-nums">8</div>
+        <div style="font-size:10px;color:#8878b0;margin-top:6px">ms</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.55);border:0.5px solid rgba(120,80,255,0.3);border-radius:16px;padding:18px 10px;text-align:center;backdrop-filter:blur(8px)">
+        <div style="font-size:10px;color:#8878b0;margin-bottom:8px">Upload</div>
+        <div style="font-size:36px;font-weight:800;color:#7c3aed;line-height:1;font-variant-numeric:tabular-nums">487</div>
+        <div style="font-size:10px;color:#8878b0;margin-top:6px">Mbps</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.55);border:0.5px solid rgba(60,100,255,0.3);border-radius:16px;padding:18px 10px;text-align:center;backdrop-filter:blur(8px)">
+        <div style="font-size:10px;color:#8878b0;margin-bottom:8px">Download</div>
+        <div style="font-size:36px;font-weight:800;color:#3355ff;line-height:1;font-variant-numeric:tabular-nums">924</div>
+        <div style="font-size:10px;color:#8878b0;margin-top:6px">Mbps</div>
+      </div>
+    </div>
+
+    <!-- 3. Ring gauges -->
+    <div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#8878b0;padding:0 2px;margin-bottom:-2px">Speed Gauges</div>
+    <div style="background:rgba(255,255,255,0.55);border:0.5px solid rgba(160,130,255,0.25);border-radius:16px;padding:22px 16px;backdrop-filter:blur(8px)">
+      <div style="display:flex;justify-content:space-around;align-items:flex-start">
+        <div style="text-align:center">
+          <canvas id="ringUp" width="96" height="96"></canvas>
+          <div style="font-size:11px;color:#8878b0;margin-top:8px">Upload</div>
+        </div>
+        <div style="text-align:center">
+          <canvas id="ringDl" width="96" height="96"></canvas>
+          <div style="font-size:11px;color:#8878b0;margin-top:8px">Download</div>
+        </div>
+        <div style="text-align:center">
+          <canvas id="ringPing" width="96" height="96"></canvas>
+          <div style="font-size:11px;color:#8878b0;margin-top:8px">Ping</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Bandwidth chart -->
+    <div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#8878b0;padding:0 2px;margin-bottom:-2px">Live Bandwidth</div>
+    <div style="background:rgba(255,255,255,0.55);border:0.5px solid rgba(160,130,255,0.25);border-radius:16px;padding:14px 16px;backdrop-filter:blur(8px)">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <span style="font-size:13px;font-weight:700;color:#3a2070">Bandwidth Monitor</span>
+        <span style="font-size:10px;color:#8878b0">24 hr</span>
+      </div>
+      <canvas id="gtc" height="72" style="width:100%;display:block"></canvas>
+      <div style="display:flex;gap:16px;margin-top:8px">
+        <div style="display:flex;align-items:center;gap:5px;font-size:11px;color:#8878b0"><div style="width:14px;height:2px;border-radius:1px;background:#7c3aed"></div>Upload</div>
+        <div style="display:flex;align-items:center;gap:5px;font-size:11px;color:#8878b0"><div style="width:14px;height:2px;border-radius:1px;background:#3355ff"></div>Download</div>
+      </div>
+    </div>
+
+    <!-- 5. Ping history -->
+    <div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#8878b0;padding:0 2px;margin-bottom:-2px">Network Latency</div>
+    <div style="background:rgba(255,220,230,0.45);border:0.5px solid rgba(255,60,90,0.3);border-radius:16px;padding:14px 16px;backdrop-filter:blur(8px)">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
+        <div>
+          <span style="display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;background:rgba(255,60,90,0.12);color:#ff3355;border:0.5px solid rgba(255,60,90,0.3);margin-bottom:6px"><i class="ti ti-brain" style="font-size:11px"></i>AI Optimized</span>
+          <div style="display:flex;align-items:baseline;gap:5px">
+            <span style="font-size:36px;font-weight:800;color:#ff3355;line-height:1;font-variant-numeric:tabular-nums">8</span>
+            <span style="font-size:13px;color:#8878b0">ms</span>
+          </div>
+          <div style="font-size:10px;color:#8878b0;margin-top:2px">avg · last 60s</div>
+        </div>
+        <span style="font-size:11px;font-weight:700;color:#22aa55;background:rgba(34,170,85,0.12);border:0.5px solid rgba(34,170,85,0.35);padding:3px 10px;border-radius:20px">Excellent</span>
+      </div>
+      <div class="ping-bar-row" id="pingBars" style="height:28px"></div>
+      <div style="display:flex;justify-content:space-between;margin-top:4px">
+        <span style="font-size:9px;color:#b0a0c0">60s ago</span>
+        <span style="font-size:9px;color:#b0a0c0">now</span>
+      </div>
+    </div>
+
+    <!-- 6. QoS -->
+    <div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#8878b0;padding:0 2px;margin-bottom:-2px">QoS — Game Priority</div>
+    <div style="background:rgba(255,255,255,0.55);border:0.5px solid rgba(160,130,255,0.25);border-radius:16px;padding:14px 16px;backdrop-filter:blur(8px)">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <span style="font-size:13px;font-weight:700;color:#3a2070">Port Forwarding</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;background:rgba(255,60,90,0.1);color:#ff3355;border:0.5px solid rgba(255,60,90,0.25)"><i class="ti ti-brain" style="font-size:11px"></i>Auto-configured</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:.5px solid rgba(160,130,255,0.15)">
+        <div style="width:32px;height:32px;border-radius:8px;background:rgba(255,60,90,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-device-gamepad-2" style="font-size:17px;color:#ff3355"></i></div>
+        <div style="flex:1"><div style="font-size:12px;font-weight:600;color:#3a2070">Steam / Gaming</div><div style="font-size:10px;color:#8878b0">UDP 27000–27100</div></div>
+        <span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;background:rgba(255,60,90,0.1);color:#ff3355;border:0.5px solid rgba(255,60,90,0.25)">High</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:.5px solid rgba(160,130,255,0.15)">
+        <div style="width:32px;height:32px;border-radius:8px;background:rgba(100,80,220,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-brand-discord" style="font-size:17px;color:#7c3aed"></i></div>
+        <div style="flex:1"><div style="font-size:12px;font-weight:600;color:#3a2070">Discord Voice</div><div style="font-size:10px;color:#8878b0">UDP 50000–65535</div></div>
+        <span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;background:rgba(255,60,90,0.1);color:#ff3355;border:0.5px solid rgba(255,60,90,0.25)">High</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:8px 0">
+        <div style="width:32px;height:32px;border-radius:8px;background:rgba(50,80,220,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-device-tv" style="font-size:17px;color:#3355ff"></i></div>
+        <div style="flex:1"><div style="font-size:12px;font-weight:600;color:#3a2070">Streaming</div><div style="font-size:10px;color:#8878b0">TCP 443, 80</div></div>
+        <span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;background:rgba(50,80,220,0.1);color:#3355ff;border:0.5px solid rgba(50,80,220,0.25)">Medium</span>
+      </div>
+    </div>
+
+    <!-- 7. Device priority -->
+    <div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#8878b0;padding:0 2px;margin-bottom:-2px">Bandwidth Priority</div>
+    <div style="background:rgba(255,255,255,0.55);border:0.5px solid rgba(160,130,255,0.25);border-radius:16px;padding:14px 16px;backdrop-filter:blur(8px)">
+      <div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:.5px solid rgba(160,130,255,0.15)">
+        <div style="width:20px;text-align:center;font-size:12px;font-weight:800;color:#ff3355">1</div>
+        <div style="width:30px;height:30px;border-radius:8px;background:rgba(255,60,90,0.12);display:flex;align-items:center;justify-content:center"><i class="ti ti-device-desktop" style="font-size:16px;color:#ff3355"></i></div>
+        <span style="flex:1;font-size:12px;font-weight:600;color:#3a2070">Gaming PC</span>
+        <span style="font-size:11px;font-weight:700;color:#ff3355;font-variant-numeric:tabular-nums">612 Mbps</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:.5px solid rgba(160,130,255,0.15)">
+        <div style="width:20px;text-align:center;font-size:12px;font-weight:800;color:#ff3355">2</div>
+        <div style="width:30px;height:30px;border-radius:8px;background:rgba(255,60,90,0.12);display:flex;align-items:center;justify-content:center"><i class="ti ti-device-gamepad" style="font-size:16px;color:#ff3355"></i></div>
+        <span style="flex:1;font-size:12px;font-weight:600;color:#3a2070">PlayStation 5</span>
+        <span style="font-size:11px;font-weight:700;color:#ff3355;font-variant-numeric:tabular-nums">284 Mbps</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:.5px solid rgba(160,130,255,0.15)">
+        <div style="width:20px;text-align:center;font-size:12px;font-weight:800;color:#8878b0">3</div>
+        <div style="width:30px;height:30px;border-radius:8px;background:rgba(100,80,220,0.12);display:flex;align-items:center;justify-content:center"><i class="ti ti-device-laptop" style="font-size:16px;color:#7c3aed"></i></div>
+        <span style="flex:1;font-size:12px;font-weight:600;color:#3a2070">MacBook Pro</span>
+        <span style="font-size:11px;font-weight:700;color:#7c3aed;font-variant-numeric:tabular-nums">98 Mbps</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:7px 0">
+        <div style="width:20px;text-align:center;font-size:12px;font-weight:800;color:#8878b0">4</div>
+        <div style="width:30px;height:30px;border-radius:8px;background:rgba(50,80,220,0.12);display:flex;align-items:center;justify-content:center"><i class="ti ti-device-mobile" style="font-size:16px;color:#3355ff"></i></div>
+        <span style="flex:1;font-size:12px;font-weight:600;color:#3a2070">iPhone 16</span>
+        <span style="font-size:11px;font-weight:700;color:#3355ff;font-variant-numeric:tabular-nums">34 Mbps</span>
+      </div>
+    </div>
+
+    <!-- 8. Band Steering -->
+    <div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#8878b0;padding:0 2px;margin-bottom:-2px">WiFi Band Steering</div>
+    <div style="background:rgba(255,255,255,0.55);border:0.5px solid rgba(160,130,255,0.25);border-radius:16px;padding:14px 16px;backdrop-filter:blur(8px)">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <span style="font-size:13px;font-weight:700;color:#3a2070">Gaming Devices → 6 GHz</span>
+        <div style="display:flex;gap:5px">
+          <span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(160,130,255,0.1);color:#a090cc;border:0.5px solid rgba(160,130,255,0.2)">2.4G</span>
+          <span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(160,130,255,0.1);color:#a090cc;border:0.5px solid rgba(160,130,255,0.2)">5G</span>
+          <span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(255,60,90,0.12);color:#ff3355;border:0.5px solid rgba(255,60,90,0.3)">6G</span>
+        </div>
+      </div>
+      <div style="font-size:11px;color:#7060a0;line-height:1.65">AI 已將 <span style="color:#ff3355;font-weight:700">Gaming PC</span> 與 <span style="color:#ff3355;font-weight:700">PS5</span> 自動切換至 6 GHz 低延遲頻段，其他裝置保持 5 GHz。</div>
+    </div>
+
+    <div style="height:50px"></div>
+  </div>
+
+    <!-- Bottom Nav -->
+  <div class="bottom-nav">
+    <div class="nav-item active"><i class="ti ti-home"></i><span>Home</span></div>
+    <div class="nav-item">
+      <div class="nav-badge-wrap"><i class="ti ti-devices"></i><div class="nav-badge">18</div></div>
+      <span>Devices</span>
+    </div>
+    <div class="nav-item"><i class="ti ti-layout-dashboard"></i><span>Dashboard</span></div>
+    <div class="nav-item"><i class="ti ti-world"></i><span>SDN</span></div>
+    <div class="nav-item"><i class="ti ti-adjustments"></i><span>Settings</span></div>
+  </div>
+
+  <!-- ── AI Sheet ── -->
+  <div class="sheet-overlay" id="sheetOverlay">
+    <div class="ai-sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-header">
+        <div class="ai-avatar"><i class="ti ti-brain"></i></div>
+        <div>
+          <div class="ai-tag">AI INSIGHT · 智慧分析</div>
+          <div class="ai-headline">偵測到高頻遊戲網路行為<br>建議啟用玩家模式</div>
+        </div>
+      </div>
+      <div class="ai-body">
+        <div class="ai-desc">
+          偵測到<b>高頻遊戲行為</b>，AI 將自動啟用 <b>QoS 遊戲加速</b>並客製化您的玩家頁面。
+        </div>
+        <div class="ai-tags">
+          <span class="ai-chip purple"><i class="ti ti-device-gamepad-2"></i>Game QoS</span>
+          <span class="ai-chip purple"><i class="ti ti-antenna"></i>6 GHz Steering</span>
+          <span class="ai-chip blue"><i class="ti ti-arrows-sort"></i>Port Forwarding</span>
+          <span class="ai-chip green"><i class="ti ti-chart-line"></i>Ping Optimizer</span>
+        </div>
+      </div>
+      <div class="sheet-actions">
+        <button class="btn-cancel" onclick="dismissSheet()">稍後再說</button>
+        <button class="btn-confirm" onclick="confirmAI()">
+          <i class="ti ti-sparkles"></i>立即套用
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Loading Overlay ── -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-logo"><i class="ti ti-brain"></i></div>
+    <div class="loading-title">AI 正在客製化您的頁面</div>
+    <div class="loading-sub">分析遊戲裝置 · 設定 QoS 規則<br>優化頻段分配 · 建立玩家儀表板</div>
+    <div class="loading-bar-wrap"><div class="loading-bar" id="loadBar"></div></div>
+    <div class="loading-dots"><div class="loading-dot"></div><div class="loading-dot"></div><div class="loading-dot"></div></div>
+  </div>
+
+</div><!-- /phone-shell -->
+
+<script>
+// ── Draw ping bars ──
+function drawPingBars() {
+  const container = document.getElementById('pingBars');
+  if (!container) return;
+  container.innerHTML = '';
+  const vals = [6,8,7,9,8,12,7,6,8,9,7,8,6,7,9,8,7,8,6,8,7,9,8,7,8,6,7,8,9,8];
+  vals.forEach(v => {
+    const bar = document.createElement('div');
+    bar.className = 'ping-bar-item';
+    const h = Math.round((v / 16) * 100);
+    const col = v <= 9 ? '#22cc66' : v <= 12 ? '#f59e0b' : '#ff3355';
+    bar.style.cssText = `height:${h}%;background:${col};opacity:0.85`;
+    container.appendChild(bar);
+  });
+}
+
+// ── Sheet logic ──
+let sheetShown = false;
+function showSheet() {
+  if (sheetShown) return;
+  sheetShown = true;
+  document.getElementById('sheetOverlay').classList.add('visible');
+}
+function dismissSheet() {
+  document.getElementById('sheetOverlay').classList.remove('visible');
+}
+
+// ── Confirm → Loading → Gaming page ──
+function confirmAI() {
+  dismissSheet();
+  const overlay = document.getElementById('loadingOverlay');
+  overlay.classList.add('visible');
+  // Progress bar
+  let pct = 0;
+  const bar = document.getElementById('loadBar');
+  const interval = setInterval(() => {
+    pct += Math.random() * 4 + 1.5;
+    if (pct >= 100) { pct = 100; clearInterval(interval); }
+    bar.style.width = pct.toFixed(1) + '%';
+  }, 60);
+  // After 2.6s → switch to gaming page
+  setTimeout(() => {
+    overlay.classList.remove('visible');
+    switchToGaming();
+  }, 2800);
+}
+
+function switchToGaming() {
+  const shell = document.getElementById('shell');
+  shell.classList.remove('light');
+  shell.classList.add('dark');
+  document.getElementById('normalScroll').style.display = 'none';
+  document.getElementById('gamingScroll').style.display = 'flex';
+    document.getElementById('gamingScroll').style.background = '#f2f4f7';
+  document.getElementById('topTitle').textContent = 'Gamer Mode';
+  document.getElementById('topIcon').className = 'ti ti-device-gamepad-2';
+    document.getElementById('shell').querySelector('.tp-badge').style.background = '#fff0f0';
+    document.getElementById('shell').querySelector('.tp-badge').style.borderColor = '#cc0000';
+    document.getElementById('topIcon').style.color = '#cc0000';
+    setTimeout(() => { drawGamingChart(); drawRings(); drawPingBars(); }, 120);
+  document.getElementById('editBtn').style.color = '#ff5252';
+  drawPingBars();
+}
+
+function drawRing(id, pct, c0, c1, label, unit) {
+  const c = document.getElementById(id);
+  if (!c) return;
+  const ctx = c.getContext('2d');
+  const cx=48, cy=48, r=36, lw=10;
+  const start = -Math.PI*0.75, end = Math.PI*0.75;
+  ctx.clearRect(0,0,96,96);
+  ctx.beginPath(); ctx.arc(cx,cy,r,start,end);
+  ctx.strokeStyle='rgba(180,160,220,0.18)'; ctx.lineWidth=lw; ctx.lineCap='round'; ctx.stroke();
+  const arcEnd = start+(end-start)*Math.min(pct,1);
+  const grad = ctx.createLinearGradient(cx-r,cy,cx+r,cy);
+  grad.addColorStop(0,c0); grad.addColorStop(1,c1);
+  ctx.beginPath(); ctx.arc(cx,cy,r,start,arcEnd);
+  ctx.strokeStyle=grad; ctx.lineWidth=lw; ctx.lineCap='round'; ctx.stroke();
+  ctx.fillStyle='#3a2070'; ctx.font='bold 14px -apple-system,sans-serif';
+  ctx.textAlign='center'; ctx.fillText(label,cx,cy+5);
+  ctx.fillStyle='#8878b0'; ctx.font='10px -apple-system,sans-serif';
+  ctx.fillText(unit,cx,cy+18);
+}
+function drawRings() {
+  drawRing('ringUp',   0.49, '#c026d3','#7c3aed', '487', 'Mbps');
+  drawRing('ringDl',   0.92, '#3355ff','#06b6d4', '924', 'Mbps');
+  drawRing('ringPing', 0.96, '#f59e0b','#ff3355',  '8',  'ms');
+}
+function drawGamingChart() {
+  const c = document.getElementById('gtc');
+  if (!c || c._drawn) return;
+  c._drawn = true;
+  c.width = c.offsetWidth;
+  const ctx = c.getContext('2d'), W = c.width, H = 70;
+  const up = [18,22,19,26,24,30,22,28,32,26,30,28,24,20,25,30,28,32,26,28,24,30,28,26];
+  const dl = [32,40,36,44,50,42,48,56,44,52,48,60,52,46,50,58,54,60,50,56,52,58,56,54];
+  function gradLine(pts, c1, c2) {
+    const xs = W/(pts.length-1);
+    // stroke gradient
+    const sg = ctx.createLinearGradient(0,0,W,0);
+    sg.addColorStop(0,c1); sg.addColorStop(1,c2);
+    ctx.beginPath();
+    pts.forEach((v,i)=>{ const x=i*xs,y=H-(v/64)*(H-6)-3; i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); });
+    ctx.strokeStyle=sg; ctx.lineWidth=2; ctx.lineJoin='round'; ctx.stroke();
+    // fill gradient
+    ctx.lineTo(W,H); ctx.lineTo(0,H); ctx.closePath();
+    const fg=ctx.createLinearGradient(0,0,W,H);
+    fg.addColorStop(0,c1+'40'); fg.addColorStop(0.5,c2+'25'); fg.addColorStop(1,c2+'00');
+    ctx.fillStyle=fg; ctx.fill();
+  }
+  gradLine(up, '#ef4444', '#2563eb');
+  gradLine(dl, '#7c3aed', '#06b6d4');
+}
+
+// Auto-trigger sheet after 3s
+setTimeout(showSheet, 2000);
+</script>
+</body>
+</html>
