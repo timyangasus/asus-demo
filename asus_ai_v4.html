@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ASUS ExpertWiFi — AI Customize</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{
+  background:#fff;font-family:'Inter',sans-serif;
+  display:flex;justify-content:center;align-items:center;
+  height:100vh;width:100vw;overflow:hidden;
+}
+
+/* ── Phone ── */
+.phone-wrap{display:flex;justify-content:center;align-items:center;transform-origin:center center}
+.phone{
+  width:390px;height:844px;
+  background:#f5f6f8;border-radius:44px;
+  border:1px solid #d8d8dc;
+  box-shadow:0 2px 24px rgba(0,0,0,0.10),0 1px 4px rgba(0,0,0,0.06);
+  position:relative;overflow:hidden;
+  display:flex;flex-direction:column;
+}
+
+/* ── Status bar ── */
+.sbar{
+  background:#fff;padding:14px 22px 0;
+  display:flex;justify-content:space-between;align-items:center;flex-shrink:0;
+  transition:background .4s;
+}
+.sb-time{font-size:15px;font-weight:700;color:#1c1c1e}
+.sb-right{display:flex;align-items:center;gap:5px}
+
+/* ── Topbar ── */
+.topbar{
+  background:#fff;border-bottom:1px solid #ebebeb;
+  padding:8px 20px 12px;
+  display:flex;justify-content:space-between;align-items:center;flex-shrink:0;
+  transition:background .4s,border-color .4s;
+}
+.tp-left{display:flex;align-items:center;gap:10px}
+.g-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#4285f4 0%,#34a853 40%,#fbbc05 70%,#ea4335 100%);display:flex;align-items:center;justify-content:center}
+.g-avatar span{font-size:14px;font-weight:900;color:#fff}
+.tp-page{font-size:18px;font-weight:700;color:#1c1c1e;transition:color .4s}
+.tp-right{display:flex;align-items:center;gap:14px}
+
+/* ── Scroll ── */
+.scroll{flex:1;overflow-y:auto;padding:14px 16px 8px;display:flex;flex-direction:column;gap:12px;-webkit-overflow-scrolling:touch;background:#f5f6f8;transition:background .4s}
+.scroll::-webkit-scrollbar{display:none}
+
+/* ── Cards ── */
+.card{background:#fff;border-radius:18px;padding:16px;box-shadow:0 1px 8px rgba(0,0,0,0.05)}
+
+/* ── Hero card ── */
+.hero-conn{display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.cc-node{display:flex;flex-direction:column;align-items:center;gap:5px}
+.cc-circle{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.cc-circle.globe{background:#e8f2ff;border:1.5px solid #b8d4f8}
+.cc-circle.main{background:#1c3a6e}
+.cc-circle.end{background:#f0f0f3;border:1.5px solid #d8d8dc}
+.cc-lbl{font-size:9px;color:#aeaeb2;letter-spacing:0.3px}
+.cc-line{flex:1;height:1.5px;background:linear-gradient(90deg,#b8d4f8,#5aacff);margin-bottom:18px}
+.cc-badge{width:20px;height:20px;border-radius:50%;background:#1a7fe8;color:#fff;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-bottom:18px}
+.hero-name{font-size:19px;font-weight:800;color:#1c1c1e;text-align:center;margin-bottom:12px;letter-spacing:-0.4px}
+.hero-sep{height:1px;background:#f2f2f2;margin-bottom:10px}
+.hero-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.hr-k{font-size:13px;color:#6e6e73;font-weight:500}
+.hr-v{font-size:13px;color:#1c1c1e;font-weight:700;font-family:'JetBrains Mono',monospace}
+.hero-status{display:flex;justify-content:space-between;align-items:flex-start}
+.hs-title{font-size:14px;font-weight:700;margin-bottom:2px}
+.hs-sub{font-size:12px;color:#8e8e93}
+.hs-good{font-size:20px;font-weight:800;color:#30d158}
+
+/* Stat cards */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.card-lbl{font-size:11px;color:#8e8e93;font-weight:600;text-transform:uppercase;letter-spacing:.3px;margin-bottom:10px}
+.traf-ring{display:flex;justify-content:center;margin-bottom:10px}
+.traf-nums{display:flex;gap:10px;margin-bottom:4px}
+.traf-n{font-size:13px;font-weight:700;display:flex;align-items:center;gap:3px}
+.traf-n.dl{color:#30d158}.traf-n.ul{color:#ff9f0a}
+.stat-val{font-size:13px;font-weight:700;color:#1c1c1e}
+.cli-nums{display:flex;justify-content:space-around;margin-top:8px}
+.cli-col{text-align:center}
+.cli-val{font-size:22px;font-weight:800;color:#1c1c1e;line-height:1}
+.cli-lbl{font-size:10px;color:#8e8e93;margin-top:3px}
+
+/* Quick actions */
+.act-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.act-btn{background:#fff;border-radius:14px;padding:13px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 1px 6px rgba(0,0,0,0.06)}
+.act-ico{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.act-ico.blue{background:#e8f2ff}.act-ico.green{background:#e8faee}
+.act-lbl{font-size:12px;font-weight:600;color:#1c1c1e}
+
+/* ─────────────────────────────
+   AI SHEET
+───────────────────────────── */
+.sheet-overlay{
+  position:absolute;inset:0;z-index:150;
+  background:rgba(0,0,0,0);pointer-events:none;
+  transition:background .3s;border-radius:44px;overflow:hidden;
+}
+.sheet-overlay.show{background:rgba(0,0,0,0.3);pointer-events:all}
+.ai-sheet{
+  position:absolute;bottom:-100%;left:0;right:0;
+  background:#fff;border-radius:24px 24px 0 0;
+  box-shadow:0 -4px 32px rgba(0,0,0,0.12);
+  transition:bottom .4s cubic-bezier(.32,1,.28,1);
+}
+.sheet-overlay.show .ai-sheet{bottom:0}
+.sheet-handle{width:36px;height:4px;background:#e0e0e0;border-radius:2px;margin:12px auto 14px}
+
+/* Sheet header */
+.sheet-head{padding:0 20px 14px;display:flex;align-items:flex-start;gap:12px;border-bottom:1px solid #f2f2f2}
+.ai-icon{
+  width:44px;height:44px;border-radius:14px;flex-shrink:0;
+  background:linear-gradient(135deg,#1a7fe8 0%,#0055cc 100%);
+  display:flex;align-items:center;justify-content:center;
+}
+.ai-tag{font-size:10px;font-weight:700;color:#1a7fe8;letter-spacing:.5px;margin-bottom:3px}
+.ai-headline{font-size:15px;font-weight:700;color:#1c1c1e;line-height:1.35}
+
+/* Sheet body */
+.sheet-body{padding:14px 20px 0}
+.ai-desc{
+  font-size:13px;color:#3c3c43;line-height:1.65;
+  background:#f5f8ff;border-left:3px solid #1a7fe8;
+  border-radius:0 10px 10px 0;padding:10px 13px;margin-bottom:12px;
+}
+.ai-desc b{color:#1c1c1e;font-weight:700}
+.ai-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
+.ai-chip{
+  font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;
+  display:flex;align-items:center;gap:4px;
+}
+.ai-chip.blue{background:#e8f2ff;color:#1a7fe8;border:.5px solid #c0d8f8}
+.ai-chip.green{background:#e8faee;color:#1a8a38;border:.5px solid #b0e8c0}
+.ai-chip.orange{background:#fff4e0;color:#c05800;border:.5px solid #f8d090}
+
+/* Sheet buttons */
+.sheet-btns{display:flex;gap:10px;padding:0 20px 28px}
+.btn-cancel{flex:1;padding:13px;border-radius:14px;font-size:14px;font-weight:600;background:#f2f2f2;border:none;color:#6e6e73;cursor:pointer}
+.btn-confirm{
+  flex:2;padding:13px;border-radius:14px;font-size:14px;font-weight:700;
+  background:linear-gradient(135deg,#1a7fe8,#0055cc);
+  border:none;color:#fff;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:7px;
+}
+
+/* ─────────────────────────────
+   LOADING OVERLAY
+───────────────────────────── */
+.loading-overlay{
+  position:absolute;inset:0;z-index:200;
+  background:#0a0f1e;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;
+  opacity:0;pointer-events:none;transition:opacity .3s;border-radius:44px;
+}
+.loading-overlay.show{opacity:1;pointer-events:all}
+.load-icon{
+  width:64px;height:64px;border-radius:20px;
+  background:linear-gradient(135deg,#1a7fe8,#0055cc);
+  display:flex;align-items:center;justify-content:center;
+  animation:pulse 1.5s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+.load-title{font-size:17px;font-weight:700;color:#fff}
+.load-sub{font-size:12px;color:#6e7a8a;text-align:center;line-height:1.6;padding:0 32px}
+.load-bar-wrap{width:200px;height:4px;background:#1a2030;border-radius:2px;overflow:hidden}
+.load-bar{height:100%;width:0;background:linear-gradient(90deg,#1a7fe8,#30d158);border-radius:2px;transition:width .05s linear}
+.load-dots{display:flex;gap:6px}
+.load-dot{width:6px;height:6px;border-radius:50%;background:#1a7fe8;animation:blink 1.2s ease-in-out infinite}
+.load-dot:nth-child(2){animation-delay:.2s}
+.load-dot:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,100%{opacity:.2}50%{opacity:1}}
+
+/* ─────────────────────────────
+   GAMER PAGE
+───────────────────────────── */
+.gamer-scroll{
+  flex:1;overflow-y:auto;padding:14px 16px 8px;
+  display:none;flex-direction:column;gap:12px;
+  background:#f5f6f8;
+  -webkit-overflow-scrolling:touch;
+}
+.gamer-scroll::-webkit-scrollbar{display:none}
+
+/* Section label */
+.g-sec{font-size:16px;font-weight:700;color:#1c1c1e;padding:0 2px}
+
+/* AI badge */
+.ai-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;background:#e8f2ff;color:#1a7fe8;border:.5px solid #c0d8f8}
+
+/* Topology */
+.topo-card{background:#fff;border-radius:18px;padding:14px 16px;box-shadow:0 1px 8px rgba(0,0,0,0.05)}
+
+/* Big number row */
+.big3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.big3-card{background:#fff;border-radius:16px;padding:16px 10px;text-align:center;box-shadow:0 1px 8px rgba(0,0,0,0.05)}
+.big3-lbl{font-size:10px;color:#8e8e93;margin-bottom:8px}
+.big3-val{font-size:32px;font-weight:800;line-height:1;font-family:'JetBrains Mono',monospace}
+.big3-unit{font-size:10px;color:#8e8e93;margin-top:5px}
+
+/* Ring gauges */
+.ring-card{background:#fff;border-radius:18px;padding:20px 16px;box-shadow:0 1px 8px rgba(0,0,0,0.05)}
+.ring-row{display:flex;justify-content:space-around;align-items:flex-start}
+.ring-wrap{text-align:center}
+.ring-lbl{font-size:11px;color:#8e8e93;margin-top:8px}
+
+/* BW chart */
+.bw-card{background:#fff;border-radius:18px;padding:14px 16px;box-shadow:0 1px 8px rgba(0,0,0,0.05)}
+.bw-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.bw-title{font-size:13px;font-weight:600;color:#1c1c1e}
+.bw-tag{font-size:11px;color:#aeaeb2}
+.legend-row{display:flex;gap:14px;margin-top:7px}
+.leg-it{display:flex;align-items:center;gap:4px;font-size:11px;color:#8e8e93}
+.leg-ln{width:12px;height:2px;border-radius:1px}
+
+/* Ping card */
+.ping-card{background:#fff5f5;border:0.5px solid #ffd0d0;border-radius:18px;padding:14px 16px;box-shadow:0 1px 8px rgba(0,0,0,0.04)}
+.ping-bar-row{display:flex;align-items:flex-end;gap:3px;height:28px;margin-top:8px}
+
+/* QoS card */
+.qos-card{background:#fff;border-radius:18px;padding:14px 16px;box-shadow:0 1px 8px rgba(0,0,0,0.05)}
+.qos-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.qos-title{font-size:13px;font-weight:700;color:#1c1c1e}
+.qos-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #f5f5f5}
+.qos-row:last-child{border-bottom:none;padding-bottom:0}
+.qos-ico{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.qos-name{font-size:12px;font-weight:600;color:#1c1c1e;flex:1}
+.qos-port{font-size:10px;color:#8e8e93}
+.qos-pri{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px}
+.qos-pri.hi{background:#fff0f0;color:#e53935;border:.5px solid #ffd0d0}
+.qos-pri.md{background:#e8f2ff;color:#1a7fe8;border:.5px solid #c0d8f8}
+
+/* Device list */
+.dev-card{background:#fff;border-radius:18px;padding:14px 16px;box-shadow:0 1px 8px rgba(0,0,0,0.05)}
+.dev-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid #f5f5f5}
+.dev-row:last-child{border-bottom:none;padding-bottom:0}
+.dev-rank{width:20px;text-align:center;font-size:12px;font-weight:800;color:#8e8e93}
+.dev-rank.top{color:#e53935}
+.dev-ico{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.dev-name{font-size:12px;font-weight:600;color:#1c1c1e;flex:1}
+.dev-bw{font-size:11px;font-weight:700;font-family:'JetBrains Mono',monospace}
+
+/* Band */
+.band-card{background:#fff;border-radius:18px;padding:14px 16px;box-shadow:0 1px 8px rgba(0,0,0,0.05)}
+.band-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.band-title{font-size:13px;font-weight:700;color:#1c1c1e}
+.band-chips{display:flex;gap:5px}
+.bchip{font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px}
+.bchip.on{background:#fff0f0;color:#e53935;border:.5px solid #ffd0d0}
+.bchip.off{background:#f0f0f3;color:#aeaeb2}
+.band-desc{font-size:11px;color:#6e6e73;line-height:1.6}
+
+/* ── Bottom Nav ── */
+.bnav{background:#fff;border-top:1px solid #ebebeb;padding:8px 0 24px;display:flex;justify-content:space-around;align-items:flex-start;flex-shrink:0;transition:background .4s,border-color .4s}
+.nav-it{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;flex:1}
+.nav-lbl{font-size:10px;font-weight:500;color:#aeaeb2;transition:color .3s}
+.nav-it.on .nav-lbl{color:#1a7fe8}
+.nav-wrap{position:relative}
+.nav-bdg{position:absolute;top:-3px;right:-8px;background:#ff3b30;color:#fff;font-size:9px;font-weight:700;width:15px;height:15px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+</style>
+</head>
+<body>
+<div class="phone-wrap" id="phoneWrap">
+<div class="phone">
+
+  <!-- Status -->
+  <div class="sbar" id="sbar">
+    <span class="sb-time">9:41</span>
+    <div class="sb-right">
+      <svg width="18" height="13" viewBox="0 0 18 13"><rect x="0" y="8" width="3" height="5" rx="1" fill="#1c1c1e"/><rect x="4.5" y="5.5" width="3" height="7.5" rx="1" fill="#1c1c1e"/><rect x="9" y="3" width="3" height="10" rx="1" fill="#1c1c1e"/><rect x="13.5" y="0" width="3" height="13" rx="1" fill="#1c1c1e"/></svg>
+      <svg width="16" height="13" viewBox="0 0 16 13"><path d="M8 10.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3z" fill="#1c1c1e"/><path d="M4.5 7.8C5.6 6.7 6.7 6 8 6s2.4.7 3.5 1.8l1.4-1.4C11.4 4.8 9.8 4 8 4s-3.4.8-4.9 2.4L4.5 7.8z" fill="#1c1c1e"/><path d="M1.1 4.5C3 2.6 5.4 1.5 8 1.5s5 1.1 6.9 3L16 3.4C13.8 1.3 11.1 0 8 0S2.2 1.3 0 3.4l1.1 1.1z" fill="#1c1c1e"/></svg>
+      <svg width="26" height="14" viewBox="0 0 26 14"><rect x="0" y="0" width="23" height="14" rx="3.5" stroke="#1c1c1e" stroke-width="1.2" fill="none"/><rect x="1.5" y="1.5" width="18" height="11" rx="2" fill="#1c1c1e"/><path d="M24 4.5v5a2 2 0 0 0 0-5z" fill="#1c1c1e" opacity=".4"/></svg>
+    </div>
+  </div>
+
+  <!-- Topbar -->
+  <div class="topbar" id="topbar">
+    <div class="tp-left">
+      <div class="g-avatar"><span>G</span></div>
+      <span class="tp-page" id="topTitle">Home</span>
+    </div>
+    <div class="tp-right">
+      <svg width="20" height="22" viewBox="0 0 20 22"><path d="M10 22c1.1 0 2-.9 2-2H8a2 2 0 0 0 2 2zm6-6V10c0-3.1-1.6-5.6-4.5-6.3V3a1.5 1.5 0 0 0-3 0v.7C5.6 4.4 4 6.9 4 10v6l-2 2v1h16v-1l-2-2z" fill="#1c1c1e"/></svg>
+      <svg width="20" height="20" viewBox="0 0 20 20"><path d="M10 2a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2h-6v6a1 1 0 1 1-2 0v-6H3a1 1 0 1 1 0-2h6V3a1 1 0 0 1 1-1z" fill="#1c1c1e"/></svg>
+    </div>
+  </div>
+
+  <!-- ── NORMAL SCROLL ── -->
+  <div class="scroll" id="normalScroll">
+    <div class="card">
+      <div class="hero-conn">
+        <div class="cc-node">
+          <div class="cc-circle globe"><svg width="22" height="22" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#1a7fe8" stroke-width="1.5" fill="none"/><path d="M12 2C9.5 5.5 8 8.5 8 12s1.5 6.5 4 10M12 2c2.5 3.5 4 6.5 4 10s-1.5 6.5-4 10M2 12h20" stroke="#1a7fe8" stroke-width="1.5" fill="none"/></svg></div>
+          <span class="cc-lbl">Internet</span>
+        </div>
+        <div class="cc-line"></div>
+        <div class="cc-node">
+          <div class="cc-circle main"><svg width="22" height="22" viewBox="0 0 24 24"><rect x="2" y="8" width="20" height="10" rx="2" fill="none" stroke="#fff" stroke-width="1.5"/><circle cx="6" cy="13" r="1.5" fill="#5f8"/><circle cx="10" cy="13" r="1.5" fill="#5af"/><line x1="7" y1="8" x2="5" y2="3" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/><line x1="12" y1="8" x2="12" y2="2" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/><line x1="17" y1="8" x2="19" y2="3" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          <span class="cc-lbl">Router</span>
+        </div>
+        <div class="cc-line"></div>
+        <div class="cc-badge">2</div>
+        <div class="cc-line"></div>
+        <div class="cc-node">
+          <div class="cc-circle end"><svg width="22" height="22" viewBox="0 0 24 24"><rect x="2" y="8" width="20" height="10" rx="2" fill="none" stroke="#1a7fe8" stroke-width="1.5"/><circle cx="6" cy="13" r="1.5" fill="#30d158"/><circle cx="10" cy="13" r="1.5" fill="#1a7fe8"/><line x1="7" y1="8" x2="5" y2="3" stroke="#c8d8ea" stroke-width="1.5" stroke-linecap="round"/><line x1="12" y1="8" x2="12" y2="2" stroke="#1a7fe8" stroke-width="1.5" stroke-linecap="round"/><line x1="17" y1="8" x2="19" y2="3" stroke="#c8d8ea" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          <span class="cc-lbl">Nodes</span>
+        </div>
+      </div>
+      <div class="hero-name">ExpertWiFi EBM68</div>
+      <div class="hero-sep"></div>
+      <div class="hero-row"><span class="hr-k">Network Name</span><span class="hr-v">asus_1234</span></div>
+      <div class="hero-sep"></div>
+      <div class="hero-status">
+        <div><div class="hs-title" style="color:#1c1c1e">Internet Connected</div><div class="hs-sub">Everything is working normally</div></div>
+        <span class="hs-good">Good</span>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <div class="card-lbl">Live Traffic</div>
+        <div class="traf-ring">
+          <svg width="56" height="56" viewBox="0 0 56 56"><circle cx="28" cy="28" r="22" fill="none" stroke="#f0f0f3" stroke-width="5"/><circle cx="28" cy="28" r="22" fill="none" stroke="#1a7fe8" stroke-width="5" stroke-dasharray="110 28" stroke-dashoffset="28" stroke-linecap="round"/><line x1="28" y1="17" x2="28" y2="25" stroke="#1a7fe8" stroke-width="1.5" stroke-linecap="round"/><line x1="28" y1="31" x2="28" y2="39" stroke="#1a7fe8" stroke-width="1.5" stroke-linecap="round"/><line x1="20" y1="28" x2="36" y2="28" stroke="#1a7fe8" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <div class="traf-nums">
+          <span class="traf-n dl"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M5 1v8M1 5l4 4 4-4" stroke="#30d158" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>162.5</span>
+          <span class="traf-n ul"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M5 9V1M1 5l4-4 4 4" stroke="#ff9f0a" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>86.3</span>
+        </div>
+        <div class="stat-val">High activity</div>
+      </div>
+      <div class="card">
+        <div class="card-lbl">Clients</div>
+        <div style="display:flex;justify-content:center;margin-bottom:8px">
+          <svg width="52" height="40" viewBox="0 0 52 40"><rect x="2" y="8" width="26" height="18" rx="2.5" fill="none" stroke="#1a7fe8" stroke-width="1.8"/><line x1="2" y1="26" x2="28" y2="26" stroke="#1a7fe8" stroke-width="1.8"/><line x1="15" y1="26" x2="15" y2="30" stroke="#1a7fe8" stroke-width="1.8"/><line x1="10" y1="30" x2="20" y2="30" stroke="#1a7fe8" stroke-width="1.8"/><rect x="30" y="14" width="18" height="22" rx="2" fill="none" stroke="#1a7fe8" stroke-width="1.5"/><circle cx="39" cy="33" r="1" fill="#1a7fe8"/></svg>
+        </div>
+        <div class="cli-nums">
+          <div class="cli-col"><div class="cli-val">13</div><div class="cli-lbl">Connected</div></div>
+          <div class="cli-col"><div class="cli-val" style="color:#ff3b30">2</div><div class="cli-lbl">Blocked</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="act-grid">
+      <div class="act-btn"><div class="act-ico blue"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M12 4V1L8 5l4 4V6a6 6 0 1 1-6 6H4a8 8 0 1 0 8-8z" fill="#1a7fe8"/></svg></div><span class="act-lbl">Restart Router</span></div>
+      <div class="act-btn"><div class="act-ico green"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M16 11c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 3-1.34 3-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" fill="#30d158"/></svg></div><span class="act-lbl">Guest Network</span></div>
+    </div>
+    <div style="height:8px"></div>
+  </div>
+
+  <!-- ── GAMER SCROLL ── -->
+  <div class="gamer-scroll" id="gamerScroll">
+
+    <div class="g-sec">AiMesh Topology</div>
+    <div class="topo-card">
+      <svg width="100%" viewBox="0 0 330 122" xmlns="http://www.w3.org/2000/svg">
+        <line x1="165" y1="36" x2="58" y2="36" stroke="#dde3ec" stroke-width="1.2" stroke-dasharray="5 3"/>
+        <line x1="165" y1="36" x2="272" y2="36" stroke="#dde3ec" stroke-width="1.2" stroke-dasharray="5 3"/>
+        <line x1="152" y1="50" x2="66" y2="98" stroke="#dde3ec" stroke-width="1.2" stroke-dasharray="5 3"/>
+        <line x1="178" y1="50" x2="264" y2="98" stroke="#dde3ec" stroke-width="1.2" stroke-dasharray="5 3"/>
+        <rect x="16" y="16" width="44" height="44" rx="11" fill="#eaf8ef" stroke="#34c759" stroke-width="1.2"/>
+        <text x="38" y="44" text-anchor="middle" font-size="22" fill="#1a8a38">⊕</text>
+        <text x="38" y="70" text-anchor="middle" font-size="9" fill="#8e8e93" font-family="sans-serif">Internet</text>
+        <rect x="131" y="12" width="52" height="52" rx="13" fill="#e8f2ff" stroke="#1a7fe8" stroke-width="2"/>
+        <rect x="142" y="30" width="30" height="14" rx="3" fill="#d0e8ff" stroke="#1a7fe8" stroke-width=".9"/>
+        <circle cx="149" cy="37" r="2.5" fill="#30d158"/><circle cx="157" cy="37" r="2.5" fill="#1a7fe8"/><circle cx="165" cy="37" r="2.5" fill="#1a7fe8" opacity=".4"/>
+        <line x1="146" y1="30" x2="142" y2="20" stroke="#dde3ec" stroke-width="1.8" stroke-linecap="round"/>
+        <line x1="157" y1="28" x2="157" y2="16" stroke="#1a7fe8" stroke-width="1.8" stroke-linecap="round" opacity=".9"/>
+        <line x1="168" y1="30" x2="172" y2="20" stroke="#dde3ec" stroke-width="1.8" stroke-linecap="round"/>
+        <path d="M148 25 Q157 19 166 25" stroke="#1a7fe8" stroke-width="1.2" fill="none" stroke-linecap="round" opacity=".7"/>
+        <text x="157" y="77" text-anchor="middle" font-size="9" fill="#555" font-family="sans-serif" font-weight="600">Main Router</text>
+        <rect x="270" y="16" width="44" height="44" rx="11" fill="#f5f7fa" stroke="#dde3ec" stroke-width="1.2"/>
+        <rect x="281" y="27" width="22" height="14" rx="3" fill="#eaeef3" stroke="#ccd3dc" stroke-width=".9"/>
+        <line x1="292" y1="41" x2="292" y2="46" stroke="#ccd3dc" stroke-width="1.5"/>
+        <line x1="285" y1="46" x2="299" y2="46" stroke="#ccd3dc" stroke-width="1.5"/>
+        <text x="292" y="70" text-anchor="middle" font-size="9" fill="#8e8e93" font-family="sans-serif">Devices</text>
+        <rect x="36" y="88" width="48" height="26" rx="9" fill="#f5f7fa" stroke="#dde3ec" stroke-width="1.2"/>
+        <circle cx="51" cy="101" r="2.5" fill="#30d158"/>
+        <rect x="64" y="92" width="3" height="4" rx=".5" fill="#30d158"/><rect x="69" y="90" width="3" height="6" rx=".5" fill="#30d158"/><rect x="74" y="88" width="3" height="8" rx=".5" fill="#30d158"/>
+        <text x="60" y="122" text-anchor="middle" font-size="8.5" fill="#8e8e93" font-family="sans-serif">Living Room</text>
+        <rect x="248" y="88" width="48" height="26" rx="9" fill="#fffaf5" stroke="#f0c080" stroke-width="1.2"/>
+        <circle cx="263" cy="101" r="2.5" fill="#e07b00"/>
+        <rect x="277" y="92" width="3" height="4" rx=".5" fill="#e07b00"/><rect x="282" y="90" width="3" height="6" rx=".5" fill="#dde3ec"/><rect x="287" y="88" width="3" height="8" rx=".5" fill="#dde3ec"/>
+        <text x="272" y="122" text-anchor="middle" font-size="8.5" fill="#8e8e93" font-family="sans-serif">Bedroom</text>
+      </svg>
+    </div>
+
+    <div class="big3">
+      <div class="big3-card"><div class="big3-lbl">Ping</div><div class="big3-val" style="color:#30d158">8</div><div class="big3-unit">ms</div></div>
+      <div class="big3-card"><div class="big3-lbl">Upload</div><div class="big3-val" style="color:#1a7fe8">487</div><div class="big3-unit">Mbps</div></div>
+      <div class="big3-card"><div class="big3-lbl">Download</div><div class="big3-val" style="color:#30d158">924</div><div class="big3-unit">Mbps</div></div>
+    </div>
+
+    <div class="g-sec">Speed Gauges</div>
+    <div class="ring-card">
+      <div class="ring-row">
+        <div class="ring-wrap"><canvas id="ringUp" width="96" height="96"></canvas><div class="ring-lbl">Upload</div></div>
+        <div class="ring-wrap"><canvas id="ringDl" width="96" height="96"></canvas><div class="ring-lbl">Download</div></div>
+        <div class="ring-wrap"><canvas id="ringPing" width="96" height="96"></canvas><div class="ring-lbl">Ping</div></div>
+      </div>
+    </div>
+
+    <div class="g-sec">Live Bandwidth</div>
+    <div class="bw-card">
+      <div class="bw-head"><span class="bw-title">Bandwidth Monitor</span><span class="bw-tag">24 hr</span></div>
+      <canvas id="bwChart" height="68" style="width:100%;display:block"></canvas>
+      <div class="legend-row">
+        <div class="leg-it"><div class="leg-ln" style="background:#1a7fe8"></div>Download</div>
+        <div class="leg-it"><div class="leg-ln" style="background:#ff9f0a"></div>Upload</div>
+      </div>
+    </div>
+
+    <div class="g-sec">Network Latency</div>
+    <div class="ping-card">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div>
+          <span class="ai-badge" style="margin-bottom:6px;display:inline-flex"><svg width="12" height="12" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm-1-13h2v6h-2zm0 8h2v2h-2z" fill="#1a7fe8"/></svg>AI Optimized</span>
+          <div style="display:flex;align-items:baseline;gap:5px">
+            <span style="font-size:34px;font-weight:800;color:#30d158;font-family:'JetBrains Mono',monospace">8</span>
+            <span style="font-size:13px;color:#8e8e93">ms avg</span>
+          </div>
+          <div style="font-size:10px;color:#8e8e93;margin-top:2px">last 60 seconds</div>
+        </div>
+        <span style="font-size:11px;font-weight:700;color:#30d158;background:#e8faee;padding:3px 10px;border-radius:20px;border:.5px solid #34c759">Excellent</span>
+      </div>
+      <div class="ping-bar-row" id="pingBars"></div>
+      <div style="display:flex;justify-content:space-between;margin-top:4px">
+        <span style="font-size:9px;color:#aeaeb2">60s ago</span>
+        <span style="font-size:9px;color:#aeaeb2">now</span>
+      </div>
+    </div>
+
+    <div class="g-sec">QoS — Game Priority</div>
+    <div class="qos-card">
+      <div class="qos-head">
+        <span class="qos-title">Port Forwarding</span>
+        <span class="ai-badge"><svg width="11" height="11" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm-1-13h2v6h-2zm0 8h2v2h-2z" fill="#1a7fe8"/></svg>Auto-configured</span>
+      </div>
+      <div class="qos-row">
+        <div class="qos-ico" style="background:#fff0f0"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M21 6H3a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1zm-1 10H4V8h16v8zM8 10h2v2H8zm4 0h2v2h-2z" fill="#e53935"/></svg></div>
+        <div style="flex:1"><div class="qos-name">Steam / Gaming</div><div class="qos-port">UDP 27000–27100</div></div>
+        <span class="qos-pri hi">High</span>
+      </div>
+      <div class="qos-row">
+        <div class="qos-ico" style="background:#f0f0ff"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.04.03.05a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z" fill="#5865f2"/></svg></div>
+        <div style="flex:1"><div class="qos-name">Discord Voice</div><div class="qos-port">UDP 50000–65535</div></div>
+        <span class="qos-pri hi">High</span>
+      </div>
+      <div class="qos-row">
+        <div class="qos-ico" style="background:#e8f2ff"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M21 3H3a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1zm-1 15H4V5h16v13zM8 15h8v2H8z" fill="#1a7fe8"/></svg></div>
+        <div style="flex:1"><div class="qos-name">Streaming</div><div class="qos-port">TCP 443, 80</div></div>
+        <span class="qos-pri md">Medium</span>
+      </div>
+    </div>
+
+    <div class="g-sec">Bandwidth Priority</div>
+    <div class="dev-card">
+      <div class="dev-row">
+        <div class="dev-rank top">1</div>
+        <div class="dev-ico" style="background:#fff0f0"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M20 3H4a1 1 0 0 0-1 1v13a1 1 0 0 0 1 1h7v2H8v2h8v-2h-3v-2h7a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1zm-1 13H5V5h14v11z" fill="#e53935"/></svg></div>
+        <span class="dev-name">Gaming PC</span>
+        <span class="dev-bw" style="color:#e53935">612 Mbps</span>
+      </div>
+      <div class="dev-row">
+        <div class="dev-rank top">2</div>
+        <div class="dev-ico" style="background:#fff0f0"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M21 6H3a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1zm-1 10H4V8h16v8zM8 10h2v2H8zm4 0h2v2h-2z" fill="#e53935"/></svg></div>
+        <span class="dev-name">PlayStation 5</span>
+        <span class="dev-bw" style="color:#e53935">284 Mbps</span>
+      </div>
+      <div class="dev-row">
+        <div class="dev-rank">3</div>
+        <div class="dev-ico" style="background:#e8f2ff"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M20 3H4a1 1 0 0 0-1 1v13a1 1 0 0 0 1 1h7v2H8v2h8v-2h-3v-2h7a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1zm-1 13H5V5h14v11z" fill="#1a7fe8"/></svg></div>
+        <span class="dev-name">MacBook Pro</span>
+        <span class="dev-bw" style="color:#1a7fe8">98 Mbps</span>
+      </div>
+      <div class="dev-row">
+        <div class="dev-rank">4</div>
+        <div class="dev-ico" style="background:#e8f2ff"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M16 1H8C6.34 1 5 2.34 5 4v16c0 1.66 1.34 3 3 3h8c1.66 0 3-1.34 3-3V4c0-1.66-1.34-3-3-3zm-2 20h-4v-1h4v1zm3-3H7V4h10v14z" fill="#1a7fe8"/></svg></div>
+        <span class="dev-name">iPhone 16</span>
+        <span class="dev-bw" style="color:#1a7fe8">34 Mbps</span>
+      </div>
+    </div>
+
+    <div class="g-sec">WiFi Band Steering</div>
+    <div class="band-card">
+      <div class="band-head">
+        <span class="band-title">Gaming Devices → 6 GHz</span>
+        <div class="band-chips">
+          <span class="bchip off">2.4G</span>
+          <span class="bchip off">5G</span>
+          <span class="bchip on">6G</span>
+        </div>
+      </div>
+      <div class="band-desc">AI 已將 <strong style="color:#e53935">Gaming PC</strong> 與 <strong style="color:#e53935">PS5</strong> 自動切換至 6 GHz 低延遲頻段，其他裝置保持 5 GHz。</div>
+    </div>
+
+    <div style="height:16px"></div>
+  </div>
+
+  <!-- Bottom Nav -->
+  <div class="bnav" id="bnav">
+    <div class="nav-it on">
+      <svg width="24" height="24" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" fill="#1a7fe8"/></svg>
+      <span class="nav-lbl" style="color:#1a7fe8">Home</span>
+    </div>
+    <div class="nav-it">
+      <div class="nav-wrap">
+        <svg width="24" height="24" viewBox="0 0 24 24"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-1V1h-2zm3 18H5V8h14v11z" fill="#aeaeb2"/></svg>
+        <div class="nav-bdg">15</div>
+      </div>
+      <span class="nav-lbl">Devices</span>
+    </div>
+    <div class="nav-it">
+      <svg width="24" height="24" viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z" fill="#aeaeb2"/></svg>
+      <span class="nav-lbl">Dashboard</span>
+    </div>
+    <div class="nav-it">
+      <svg width="24" height="24" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" fill="#aeaeb2"/></svg>
+      <span class="nav-lbl">SDN</span>
+    </div>
+    <div class="nav-it">
+      <svg width="24" height="24" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94s-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.49.49 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54A.484.484 0 0 0 14 2h-4c-.25 0-.46.18-.49.42l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87a.49.49 0 0 0 .12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.49.41h4c.25 0 .46-.18.49-.42l.36-2.54c.59-.24 1.13-.57 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32a.49.49 0 0 0-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z" fill="#aeaeb2"/></svg>
+      <span class="nav-lbl">Settings</span>
+    </div>
+  </div>
+
+  <!-- AI Sheet overlay -->
+  <div class="sheet-overlay" id="sheetOverlay">
+    <div class="ai-sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-head">
+        <div class="ai-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2zm0 3a3 3 0 1 1 0 6 3 3 0 0 1 0-6zm0 14.2a7.2 7.2 0 0 1-6-3.22c.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08a7.2 7.2 0 0 1-6 3.22z" fill="#fff"/></svg>
+        </div>
+        <div>
+          <div class="ai-tag">AI INSIGHT · 智慧分析</div>
+          <div class="ai-headline">偵測到高頻遊戲行為<br>建議啟用玩家模式</div>
+        </div>
+      </div>
+      <div class="sheet-body">
+        <div class="ai-desc">偵測到<b>高頻遊戲行為</b>，AI 將自動啟用 <b>QoS 遊戲加速</b>並客製化您的玩家頁面。</div>
+        <div class="ai-chips">
+          <span class="ai-chip blue"><svg width="11" height="11" viewBox="0 0 24 24"><path d="M21 6H3a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1zm-1 10H4V8h16v8zM8 10h2v2H8zm4 0h2v2h-2z" fill="#1a7fe8"/></svg>Game QoS</span>
+          <span class="ai-chip blue"><svg width="11" height="11" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#1a7fe8" stroke-width="2" fill="none"/><path d="M8 12h8M12 8v8" stroke="#1a7fe8" stroke-width="2" stroke-linecap="round"/></svg>6 GHz Steering</span>
+          <span class="ai-chip green"><svg width="11" height="11" viewBox="0 0 24 24"><path d="M13 10h7l-9 13v-9H4l9-13v9z" fill="#1a8a38"/></svg>Ping Optimizer</span>
+          <span class="ai-chip orange"><svg width="11" height="11" viewBox="0 0 24 24"><path d="M17 1l4 4-4 4M3 11V9a4 4 0 0 1 4-4h11M7 23l-4-4 4-4m14 2v2a4 4 0 0 1-4 4H3" stroke="#c05800" stroke-width="2" fill="none" stroke-linecap="round"/></svg>Port Forward</span>
+        </div>
+      </div>
+      <div class="sheet-btns">
+        <button class="btn-cancel" onclick="dismissSheet()">稍後再說</button>
+        <button class="btn-confirm" onclick="confirmAI()">
+          <svg width="16" height="16" viewBox="0 0 24 24"><path d="M13 10h7l-9 13v-9H4l9-13v9z" fill="#fff"/></svg>
+          立即套用
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading overlay -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="load-icon">
+      <svg width="32" height="32" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2zm0 3a3 3 0 1 1 0 6 3 3 0 0 1 0-6zm0 14.2a7.2 7.2 0 0 1-6-3.22c.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08a7.2 7.2 0 0 1-6 3.22z" fill="#fff"/></svg>
+    </div>
+    <div class="load-title">AI 正在客製化您的頁面</div>
+    <div class="load-sub">分析遊戲裝置 · 設定 QoS 規則<br>優化頻段分配 · 建立玩家儀表板</div>
+    <div class="load-bar-wrap"><div class="load-bar" id="loadBar"></div></div>
+    <div class="load-dots">
+      <div class="load-dot"></div>
+      <div class="load-dot"></div>
+      <div class="load-dot"></div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<script>
+// ── Sheet ──
+let sheetShown = false;
+function showSheet() {
+  if (sheetShown) return;
+  sheetShown = true;
+  document.getElementById('sheetOverlay').classList.add('show');
+}
+function dismissSheet() {
+  document.getElementById('sheetOverlay').classList.remove('show');
+}
+function confirmAI() {
+  dismissSheet();
+  const lo = document.getElementById('loadingOverlay');
+  lo.classList.add('show');
+  let pct = 0;
+  const bar = document.getElementById('loadBar');
+  const iv = setInterval(() => {
+    pct += Math.random()*4+1.5;
+    if (pct >= 100) { pct = 100; clearInterval(iv); }
+    bar.style.width = pct.toFixed(1) + '%';
+  }, 60);
+  setTimeout(() => { lo.classList.remove('show'); switchGamer(); }, 2800);
+}
+
+// ── Switch to gamer ──
+function switchGamer() {
+  document.getElementById('normalScroll').style.display = 'none';
+  const gs = document.getElementById('gamerScroll');
+  gs.style.display = 'flex';
+  document.getElementById('topTitle').textContent = 'Gamer Mode';
+  // Keep white theme
+  document.getElementById('sbar').style.background = '#fff';
+  document.getElementById('topbar').style.background = '#fff';
+  document.getElementById('bnav').style.background = '#fff';
+  setTimeout(drawGamerCharts, 80);
+}
+
+// ── Draw charts ──
+function drawRing(id, pct, c0, c1, label, unit) {
+  const c = document.getElementById(id);
+  if (!c) return;
+  const ctx = c.getContext('2d'), cx=48, cy=48, r=36, lw=10;
+  const start = -Math.PI*0.75, end = Math.PI*0.75;
+  ctx.clearRect(0,0,96,96);
+  ctx.beginPath(); ctx.arc(cx,cy,r,start,end);
+  ctx.strokeStyle='#f0f0f3'; ctx.lineWidth=lw; ctx.lineCap='round'; ctx.stroke();
+  const arcEnd = start+(end-start)*Math.min(pct,1);
+  const grad = ctx.createLinearGradient(cx-r,cy,cx+r,cy);
+  grad.addColorStop(0,c0); grad.addColorStop(1,c1);
+  ctx.beginPath(); ctx.arc(cx,cy,r,start,arcEnd);
+  ctx.strokeStyle=grad; ctx.lineWidth=lw; ctx.lineCap='round'; ctx.stroke();
+  ctx.fillStyle='#1c1c1e'; ctx.font='bold 14px Inter,sans-serif';
+  ctx.textAlign='center'; ctx.fillText(label,cx,cy+5);
+  ctx.fillStyle='#8e8e93'; ctx.font='10px Inter,sans-serif';
+  ctx.fillText(unit,cx,cy+18);
+}
+
+function drawGamerCharts() {
+  drawRing('ringUp',   0.49, '#1a7fe8','#30d158', '487','Mbps');
+  drawRing('ringDl',   0.92, '#30d158','#1a7fe8', '924','Mbps');
+  drawRing('ringPing', 0.96, '#ff9f0a','#30d158',   '8', 'ms');
+
+  const bw = document.getElementById('bwChart');
+  if (bw && !bw._d) {
+    bw._d = true; bw.width = bw.offsetWidth;
+    const ctx = bw.getContext('2d'), W=bw.width, H=68;
+    const dl=[20,26,34,40,48,42,34,28,24,32,52,68,60,52,56,64,72,76,64,56,48,40,30,22];
+    const ul=[8,12,16,21,26,22,17,14,11,16,28,36,32,26,30,34,38,42,34,30,25,20,14,9];
+    function ln(pts,col){
+      const xs=W/(pts.length-1);
+      ctx.beginPath();
+      pts.forEach((v,i)=>{const x=i*xs,y=H-(v/80)*(H-8)-4;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y)});
+      ctx.strokeStyle=col;ctx.lineWidth=2;ctx.lineJoin='round';ctx.stroke();
+      ctx.lineTo(W,H);ctx.lineTo(0,H);ctx.closePath();
+      const g=ctx.createLinearGradient(0,0,0,H);
+      g.addColorStop(0,col+'28');g.addColorStop(1,col+'00');
+      ctx.fillStyle=g;ctx.fill();
+    }
+    ln(dl,'#1a7fe8'); ln(ul,'#ff9f0a');
+  }
+
+  const pb = document.getElementById('pingBars');
+  if (pb && !pb._d) {
+    pb._d = true;
+    [6,8,7,9,8,12,7,6,8,9,7,8,6,7,9,8,7,8,6,8,7,9,8,7,8,6,7,8,9,8].forEach(v=>{
+      const b=document.createElement('div');
+      const h=Math.max(2,Math.round((v/14)*28));
+      b.style.cssText=`flex:1;height:${h}px;background:${v<=9?'#30d158':v<=12?'#ff9f0a':'#e53935'};border-radius:2px 2px 0 0;opacity:0.85`;
+      pb.appendChild(b);
+    });
+  }
+}
+
+// Auto-trigger sheet after 2s
+setTimeout(showSheet, 2000);
+
+// Auto-scale
+function scalePhone() {
+  const wrap = document.getElementById('phoneWrap');
+  if (!wrap) return;
+  const scale = Math.min((window.innerHeight-40)/844,(window.innerWidth-40)/390,1);
+  wrap.style.transform = `scale(${scale})`;
+}
+scalePhone();
+window.addEventListener('resize', scalePhone);
+</script>
+</body>
+</html>

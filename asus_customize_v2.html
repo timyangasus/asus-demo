@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ASUS ExpertWiFi — Customize</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{
+  background:#fff;font-family:'Inter',sans-serif;
+  display:flex;justify-content:center;align-items:center;
+  height:100vh;width:100vw;overflow:hidden;
+}
+
+/* ── Phone ── */
+.phone-wrap{display:flex;justify-content:center;align-items:center;transform-origin:center center}
+.phone{
+  width:390px;height:844px;
+  background:#f5f6f8;border-radius:44px;
+  border:1px solid #d8d8dc;
+  box-shadow:0 2px 24px rgba(0,0,0,0.10),0 1px 4px rgba(0,0,0,0.06);
+  position:relative;overflow:hidden;
+  display:flex;flex-direction:column;
+}
+
+/* ── Status bar ── */
+.sbar{
+  background:#fff;padding:14px 22px 0;
+  display:flex;justify-content:space-between;align-items:center;
+  flex-shrink:0;
+}
+.sb-time{font-size:15px;font-weight:700;color:#1c1c1e}
+.sb-right{display:flex;align-items:center;gap:5px}
+
+/* ── Topbar ── */
+.topbar{
+  background:#fff;border-bottom:1px solid #ebebeb;
+  padding:8px 20px 12px;
+  display:flex;justify-content:space-between;align-items:center;flex-shrink:0;
+}
+.tp-left{display:flex;align-items:center;gap:10px}
+.g-avatar{
+  width:32px;height:32px;border-radius:50%;
+  background:linear-gradient(135deg,#4285f4 0%,#34a853 40%,#fbbc05 70%,#ea4335 100%);
+  display:flex;align-items:center;justify-content:center;
+}
+.g-avatar span{font-size:14px;font-weight:900;color:#fff}
+.tp-page{font-size:18px;font-weight:700;color:#1c1c1e}
+.tp-right{display:flex;align-items:center;gap:12px}
+.edit-btn{
+  font-size:14px;font-weight:600;color:#1a7fe8;
+  background:none;border:none;cursor:pointer;padding:4px 0;
+}
+.done-btn{
+  font-size:14px;font-weight:600;color:#1a7fe8;
+  background:none;border:none;cursor:pointer;display:none;
+}
+
+/* ── Scroll ── */
+.scroll{
+  flex:1;overflow-y:auto;padding:14px 16px 8px;
+  display:flex;flex-direction:column;gap:12px;
+  -webkit-overflow-scrolling:touch;background:#f5f6f8;
+}
+.scroll::-webkit-scrollbar{display:none}
+
+/* ── Cards ── */
+.card{
+  background:#fff;border-radius:18px;
+  box-shadow:0 1px 8px rgba(0,0,0,0.05);
+  position:relative;transition:opacity .2s;
+}
+.card-inner{padding:16px}
+
+/* Edit mode overlay */
+.edit-mode .card{border:1.5px dashed #1a7fe8}
+
+/* Remove btn */
+.rm-btn{
+  display:none;
+  position:absolute;top:-8px;left:-8px;z-index:20;
+  width:22px;height:22px;border-radius:50%;
+  background:#ff3b30;border:2px solid #fff;
+  color:#fff;font-size:13px;font-weight:700;
+  align-items:center;justify-content:center;
+  cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,0.2);
+  line-height:1;
+}
+.edit-mode .rm-btn{display:flex}
+
+/* Drag handle */
+.drag-handle{
+  display:none;
+  position:absolute;top:50%;right:14px;
+  transform:translateY(-50%);
+  color:#d0d0d5;cursor:grab;
+}
+.edit-mode .drag-handle{display:block}
+
+/* ── Hero card ── */
+.hero-conn{display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.cc-node{display:flex;flex-direction:column;align-items:center;gap:5px}
+.cc-circle{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.cc-circle.globe{background:#e8f2ff;border:1.5px solid #b8d4f8}
+.cc-circle.main{background:#1c3a6e}
+.cc-circle.end{background:#f0f0f3;border:1.5px solid #d8d8dc}
+.cc-lbl{font-size:9px;color:#aeaeb2;letter-spacing:0.3px}
+.cc-line{flex:1;height:1.5px;background:linear-gradient(90deg,#b8d4f8,#5aacff);margin-bottom:18px}
+.cc-badge{
+  width:20px;height:20px;border-radius:50%;
+  background:#1a7fe8;color:#fff;font-size:10px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;margin-bottom:18px;
+}
+.hero-name{font-size:19px;font-weight:800;color:#1c1c1e;text-align:center;margin-bottom:12px;letter-spacing:-0.4px}
+.hero-sep{height:1px;background:#f2f2f2;margin-bottom:10px}
+.hero-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.hr-k{font-size:13px;color:#6e6e73;font-weight:500}
+.hr-v{font-size:13px;color:#1c1c1e;font-weight:700;font-family:'JetBrains Mono',monospace}
+.hero-status{display:flex;justify-content:space-between;align-items:flex-start}
+.hs-title{font-size:14px;font-weight:700;color:#1c1c1e;margin-bottom:2px}
+.hs-sub{font-size:12px;color:#8e8e93}
+.hs-good{font-size:20px;font-weight:800;color:#30d158}
+
+/* ── Section label ── */
+.sec-lbl{font-size:16px;font-weight:700;color:#1c1c1e;padding:0 2px}
+
+/* ── Two-col ── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+/* ── Stat card ── */
+.card-lbl{font-size:11px;color:#8e8e93;font-weight:600;text-transform:uppercase;letter-spacing:.3px;margin-bottom:10px}
+.traf-ring{display:flex;justify-content:center;margin-bottom:10px}
+.traf-nums{display:flex;gap:10px;margin-bottom:4px}
+.traf-n{font-size:13px;font-weight:700;display:flex;align-items:center;gap:3px}
+.traf-n.dl{color:#30d158} .traf-n.ul{color:#ff9f0a}
+.stat-val{font-size:13px;font-weight:700;color:#1c1c1e}
+.cli-icon-row{display:flex;justify-content:center;margin-bottom:10px}
+.cli-nums{display:flex;justify-content:space-around}
+.cli-col{text-align:center}
+.cli-val{font-size:22px;font-weight:800;color:#1c1c1e;line-height:1}
+.cli-lbl{font-size:10px;color:#8e8e93;margin-top:3px}
+
+/* ── Info rows ── */
+.irow{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid #f5f5f5}
+.irow:last-child{border-bottom:none;padding-bottom:0}
+.ir-k{font-size:12px;color:#8e8e93;font-weight:500}
+.ir-v{font-size:12px;font-weight:600;color:#1c1c1e;font-family:'JetBrains Mono',monospace}
+
+/* ── Bar metric ── */
+.bar-row{margin-bottom:9px}
+.bar-row:last-child{margin-bottom:0}
+.bar-top{display:flex;justify-content:space-between;margin-bottom:5px}
+.bar-k{font-size:11px;color:#8e8e93}
+.bar-v{font-size:11px;font-weight:700;color:#1c1c1e}
+.bar-track{height:5px;background:#f0f0f3;border-radius:3px;overflow:hidden}
+.bar-fill{height:100%;border-radius:3px}
+
+/* ── Action grid ── */
+.act-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.act-btn{
+  background:#fff;border-radius:14px;padding:13px 14px;
+  display:flex;align-items:center;gap:10px;
+  box-shadow:0 1px 6px rgba(0,0,0,0.06);
+}
+.act-ico{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.act-ico.blue{background:#e8f2ff} .act-ico.green{background:#e8faee}
+.act-ico.orange{background:#fff4e0} .act-ico.red{background:#fff0f0}
+.act-lbl{font-size:12px;font-weight:600;color:#1c1c1e}
+
+/* ── Parental card ── */
+.paren-row{display:flex;align-items:center;justify-content:space-between}
+.paren-left{display:flex;align-items:center;gap:12px}
+.paren-icon{width:40px;height:40px;border-radius:12px;background:#fff4e0;display:flex;align-items:center;justify-content:center}
+.paren-name{font-size:13px;font-weight:700;color:#1c1c1e}
+.paren-sub{font-size:11px;color:#8e8e93;margin-top:2px}
+
+/* ── TC chart ── */
+.tc-head{display:flex;justify-content:space-between;margin-bottom:10px}
+.tc-title{font-size:13px;font-weight:600;color:#1c1c1e}
+.tc-tag{font-size:11px;color:#aeaeb2}
+.legend-row{display:flex;gap:14px;margin-top:7px}
+.leg-it{display:flex;align-items:center;gap:4px;font-size:11px;color:#8e8e93}
+.leg-ln{width:12px;height:2px;border-radius:1px}
+
+/* ── Ping card ── */
+.ping-bar-row{display:flex;align-items:flex-end;gap:3px;height:36px;margin-top:6px}
+
+/* ── Band chips ── */
+.band-chips{display:flex;gap:5px}
+.bchip{font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px}
+.bchip.on{background:#e8f2ff;color:#1a7fe8}
+.bchip.off{background:#f0f0f3;color:#aeaeb2}
+
+/* ── Add modules section ── */
+.add-section{display:none;flex-direction:column;gap:10px}
+.add-section.show{display:flex}
+.add-title{font-size:13px;font-weight:700;color:#8e8e93;text-transform:uppercase;letter-spacing:.5px;padding:0 2px}
+.add-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.add-chip{
+  background:#fff;border:1.5px dashed #1a7fe8;border-radius:14px;
+  padding:11px 14px;display:flex;align-items:center;gap:8px;
+  cursor:pointer;color:#1a7fe8;font-size:12px;font-weight:600;
+  transition:background .15s;
+}
+.add-chip:hover{background:#f0f6ff}
+.add-chip.used{opacity:.3;pointer-events:none;border-color:#d0d0d5;color:#aeaeb2}
+.add-chip-icon{width:28px;height:28px;border-radius:8px;background:#e8f2ff;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+
+/* ── Bottom Nav ── */
+.bnav{
+  background:#fff;border-top:1px solid #ebebeb;
+  padding:8px 0 24px;
+  display:flex;justify-content:space-around;align-items:flex-start;
+  flex-shrink:0;
+}
+.nav-it{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;flex:1}
+.nav-lbl{font-size:10px;font-weight:500;color:#aeaeb2}
+.nav-it.on .nav-lbl{color:#1a7fe8}
+.nav-wrap{position:relative}
+.nav-bdg{
+  position:absolute;top:-3px;right:-8px;
+  background:#ff3b30;color:#fff;font-size:9px;font-weight:700;
+  width:15px;height:15px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+}
+</style>
+</head>
+<body>
+<div class="phone-wrap" id="phoneWrap">
+<div class="phone">
+
+  <!-- Status bar -->
+  <div class="sbar">
+    <span class="sb-time">9:41</span>
+    <div class="sb-right">
+      <svg width="18" height="13" viewBox="0 0 18 13"><rect x="0" y="8" width="3" height="5" rx="1" fill="#1c1c1e"/><rect x="4.5" y="5.5" width="3" height="7.5" rx="1" fill="#1c1c1e"/><rect x="9" y="3" width="3" height="10" rx="1" fill="#1c1c1e"/><rect x="13.5" y="0" width="3" height="13" rx="1" fill="#1c1c1e"/></svg>
+      <svg width="16" height="13" viewBox="0 0 16 13"><path d="M8 10.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3z" fill="#1c1c1e"/><path d="M4.5 7.8C5.6 6.7 6.7 6 8 6s2.4.7 3.5 1.8l1.4-1.4C11.4 4.8 9.8 4 8 4s-3.4.8-4.9 2.4L4.5 7.8z" fill="#1c1c1e"/><path d="M1.1 4.5C3 2.6 5.4 1.5 8 1.5s5 1.1 6.9 3L16 3.4C13.8 1.3 11.1 0 8 0S2.2 1.3 0 3.4l1.1 1.1z" fill="#1c1c1e"/></svg>
+      <svg width="26" height="14" viewBox="0 0 26 14"><rect x="0" y="0" width="23" height="14" rx="3.5" stroke="#1c1c1e" stroke-width="1.2" fill="none"/><rect x="1.5" y="1.5" width="18" height="11" rx="2" fill="#1c1c1e"/><path d="M24 4.5v5a2 2 0 0 0 0-5z" fill="#1c1c1e" opacity=".4"/></svg>
+    </div>
+  </div>
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="tp-left">
+      <div class="g-avatar"><span>G</span></div>
+      <span class="tp-page">Home</span>
+    </div>
+    <div class="tp-right">
+      <button class="edit-btn" id="editBtn" onclick="enterEdit()">Edit</button>
+      <button class="done-btn" id="doneBtn" onclick="exitEdit()">Done</button>
+      <svg width="20" height="22" viewBox="0 0 20 22"><path d="M10 22c1.1 0 2-.9 2-2H8a2 2 0 0 0 2 2zm6-6V10c0-3.1-1.6-5.6-4.5-6.3V3a1.5 1.5 0 0 0-3 0v.7C5.6 4.4 4 6.9 4 10v6l-2 2v1h16v-1l-2-2z" fill="#1c1c1e"/></svg>
+    </div>
+  </div>
+
+  <!-- Scroll -->
+  <div class="scroll" id="scroll">
+
+    <!-- Hero (always visible, no remove) -->
+    <div class="card" id="mod-hero" style="border:none!important">
+      <div class="card-inner">
+        <div class="hero-conn">
+          <div class="cc-node">
+            <div class="cc-circle globe">
+              <svg width="22" height="22" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#1a7fe8" stroke-width="1.5" fill="none"/><path d="M12 2C9.5 5.5 8 8.5 8 12s1.5 6.5 4 10M12 2c2.5 3.5 4 6.5 4 10s-1.5 6.5-4 10M2 12h20" stroke="#1a7fe8" stroke-width="1.5" fill="none"/></svg>
+            </div>
+            <span class="cc-lbl">Internet</span>
+          </div>
+          <div class="cc-line"></div>
+          <div class="cc-node">
+            <div class="cc-circle main">
+              <svg width="22" height="22" viewBox="0 0 24 24"><rect x="2" y="8" width="20" height="10" rx="2" fill="none" stroke="#fff" stroke-width="1.5"/><circle cx="6" cy="13" r="1.5" fill="#5f8"/><circle cx="10" cy="13" r="1.5" fill="#5af"/><line x1="7" y1="8" x2="5" y2="3" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/><line x1="12" y1="8" x2="12" y2="2" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/><line x1="17" y1="8" x2="19" y2="3" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </div>
+            <span class="cc-lbl">Router</span>
+          </div>
+          <div class="cc-line"></div>
+          <div class="cc-badge">2</div>
+          <div class="cc-line"></div>
+          <div class="cc-node">
+            <div class="cc-circle end">
+              <svg width="22" height="22" viewBox="0 0 24 24"><rect x="2" y="8" width="20" height="10" rx="2" fill="none" stroke="#1a7fe8" stroke-width="1.5"/><circle cx="6" cy="13" r="1.5" fill="#30d158"/><circle cx="10" cy="13" r="1.5" fill="#1a7fe8"/><line x1="7" y1="8" x2="5" y2="3" stroke="#c8d8ea" stroke-width="1.5" stroke-linecap="round"/><line x1="12" y1="8" x2="12" y2="2" stroke="#1a7fe8" stroke-width="1.5" stroke-linecap="round"/><line x1="17" y1="8" x2="19" y2="3" stroke="#c8d8ea" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </div>
+            <span class="cc-lbl">Nodes</span>
+          </div>
+        </div>
+        <div class="hero-name">ExpertWiFi EBM68</div>
+        <div class="hero-sep"></div>
+        <div class="hero-row"><span class="hr-k">Network Name</span><span class="hr-v">asus_1234</span></div>
+        <div class="hero-sep"></div>
+        <div class="hero-status">
+          <div><div class="hs-title">Internet Connected</div><div class="hs-sub">Everything is working normally</div></div>
+          <span class="hs-good">Good</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Traffic + Client -->
+    <div class="sec-lbl">Status</div>
+    <div class="two-col">
+      <div class="card" id="mod-traffic">
+        <div class="rm-btn" onclick="removeCard('mod-traffic','traffic')">−</div>
+        <svg class="drag-handle" width="16" height="16" viewBox="0 0 16 16"><circle cx="5" cy="4" r="1.5" fill="currentColor"/><circle cx="11" cy="4" r="1.5" fill="currentColor"/><circle cx="5" cy="8" r="1.5" fill="currentColor"/><circle cx="11" cy="8" r="1.5" fill="currentColor"/><circle cx="5" cy="12" r="1.5" fill="currentColor"/><circle cx="11" cy="12" r="1.5" fill="currentColor"/></svg>
+        <div class="card-inner">
+          <div class="card-lbl">Live Traffic</div>
+          <div class="traf-ring">
+            <svg width="56" height="56" viewBox="0 0 56 56">
+              <circle cx="28" cy="28" r="22" fill="none" stroke="#f0f0f3" stroke-width="5"/>
+              <circle cx="28" cy="28" r="22" fill="none" stroke="#1a7fe8" stroke-width="5" stroke-dasharray="110 28" stroke-dashoffset="28" stroke-linecap="round"/>
+              <line x1="28" y1="17" x2="28" y2="25" stroke="#1a7fe8" stroke-width="1.5" stroke-linecap="round"/>
+              <line x1="28" y1="31" x2="28" y2="39" stroke="#1a7fe8" stroke-width="1.5" stroke-linecap="round"/>
+              <line x1="20" y1="28" x2="36" y2="28" stroke="#1a7fe8" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="traf-nums">
+            <span class="traf-n dl"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M5 1v8M1 5l4 4 4-4" stroke="#30d158" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>162.5</span>
+            <span class="traf-n ul"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M5 9V1M1 5l4-4 4 4" stroke="#ff9f0a" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>86.3</span>
+          </div>
+          <div class="stat-val">High activity</div>
+        </div>
+      </div>
+      <div class="card" id="mod-clients">
+        <div class="rm-btn" onclick="removeCard('mod-clients','clients')">−</div>
+        <svg class="drag-handle" width="16" height="16" viewBox="0 0 16 16"><circle cx="5" cy="4" r="1.5" fill="currentColor"/><circle cx="11" cy="4" r="1.5" fill="currentColor"/><circle cx="5" cy="8" r="1.5" fill="currentColor"/><circle cx="11" cy="8" r="1.5" fill="currentColor"/><circle cx="5" cy="12" r="1.5" fill="currentColor"/><circle cx="11" cy="12" r="1.5" fill="currentColor"/></svg>
+        <div class="card-inner">
+          <div class="card-lbl">Clients</div>
+          <div class="cli-icon-row">
+            <svg width="52" height="40" viewBox="0 0 52 40"><rect x="2" y="8" width="26" height="18" rx="2.5" fill="none" stroke="#1a7fe8" stroke-width="1.8"/><line x1="2" y1="26" x2="28" y2="26" stroke="#1a7fe8" stroke-width="1.8"/><line x1="15" y1="26" x2="15" y2="30" stroke="#1a7fe8" stroke-width="1.8"/><line x1="10" y1="30" x2="20" y2="30" stroke="#1a7fe8" stroke-width="1.8"/><rect x="30" y="14" width="18" height="22" rx="2" fill="none" stroke="#1a7fe8" stroke-width="1.5"/><circle cx="39" cy="33" r="1" fill="#1a7fe8"/></svg>
+          </div>
+          <div class="cli-nums">
+            <div class="cli-col"><div class="cli-val">13</div><div class="cli-lbl">Connected</div></div>
+            <div class="cli-col"><div class="cli-val" style="color:#ff3b30">2</div><div class="cli-lbl">Blocked</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Network Info -->
+    <div class="card" id="mod-netinfo">
+      <div class="rm-btn" onclick="removeCard('mod-netinfo','netinfo')">−</div>
+      <svg class="drag-handle" width="16" height="16" viewBox="0 0 16 16"><circle cx="5" cy="4" r="1.5" fill="currentColor"/><circle cx="11" cy="4" r="1.5" fill="currentColor"/><circle cx="5" cy="8" r="1.5" fill="currentColor"/><circle cx="11" cy="8" r="1.5" fill="currentColor"/><circle cx="5" cy="12" r="1.5" fill="currentColor"/><circle cx="11" cy="12" r="1.5" fill="currentColor"/></svg>
+      <div class="card-inner">
+        <div class="card-lbl">Network Info</div>
+        <div class="irow"><span class="ir-k">WAN IP</span><span class="ir-v">192.168.137.1</span></div>
+        <div class="irow"><span class="ir-k">DNS</span><span class="ir-v" style="color:#1a7fe8">1.1.1.1</span></div>
+        <div class="irow"><span class="ir-k">Gateway</span><span class="ir-v">192.168.24.1</span></div>
+        <div class="irow"><span class="ir-k">Uptime</span><span class="ir-v" style="color:#30d158">99.9%</span></div>
+      </div>
+    </div>
+
+    <!-- Bandwidth chart -->
+    <div class="card" id="mod-bw">
+      <div class="rm-btn" onclick="removeCard('mod-bw','bw')">−</div>
+      <svg class="drag-handle" width="16" height="16" viewBox="0 0 16 16"><circle cx="5" cy="4" r="1.5" fill="currentColor"/><circle cx="11" cy="4" r="1.5" fill="currentColor"/><circle cx="5" cy="8" r="1.5" fill="currentColor"/><circle cx="11" cy="8" r="1.5" fill="currentColor"/><circle cx="5" cy="12" r="1.5" fill="currentColor"/><circle cx="11" cy="12" r="1.5" fill="currentColor"/></svg>
+      <div class="card-inner">
+        <div class="tc-head"><span class="tc-title">Bandwidth Monitor</span><span class="tc-tag">24 hr</span></div>
+        <canvas id="tcChart" height="70" style="width:100%;display:block"></canvas>
+        <div class="legend-row">
+          <div class="leg-it"><div class="leg-ln" style="background:#1a7fe8"></div>Download</div>
+          <div class="leg-it"><div class="leg-ln" style="background:#ff9f0a"></div>Upload</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- System -->
+    <div class="card" id="mod-system">
+      <div class="rm-btn" onclick="removeCard('mod-system','system')">−</div>
+      <svg class="drag-handle" width="16" height="16" viewBox="0 0 16 16"><circle cx="5" cy="4" r="1.5" fill="currentColor"/><circle cx="11" cy="4" r="1.5" fill="currentColor"/><circle cx="5" cy="8" r="1.5" fill="currentColor"/><circle cx="11" cy="8" r="1.5" fill="currentColor"/><circle cx="5" cy="12" r="1.5" fill="currentColor"/><circle cx="11" cy="12" r="1.5" fill="currentColor"/></svg>
+      <div class="card-inner">
+        <div class="card-lbl">System</div>
+        <div class="bar-row"><div class="bar-top"><span class="bar-k">CPU</span><span class="bar-v">23%</span></div><div class="bar-track"><div class="bar-fill" style="width:23%;background:#1a7fe8"></div></div></div>
+        <div class="bar-row"><div class="bar-top"><span class="bar-k">RAM</span><span class="bar-v">67%</span></div><div class="bar-track"><div class="bar-fill" style="width:67%;background:#ff9f0a"></div></div></div>
+        <div class="bar-row"><div class="bar-top"><span class="bar-k">Flash</span><span class="bar-v">41%</span></div><div class="bar-track"><div class="bar-fill" style="width:41%;background:#30d158"></div></div></div>
+      </div>
+    </div>
+
+    <!-- WiFi Insight -->
+    <div class="card" id="mod-wifi">
+      <div class="rm-btn" onclick="removeCard('mod-wifi','wifi')">−</div>
+      <svg class="drag-handle" width="16" height="16" viewBox="0 0 16 16"><circle cx="5" cy="4" r="1.5" fill="currentColor"/><circle cx="11" cy="4" r="1.5" fill="currentColor"/><circle cx="5" cy="8" r="1.5" fill="currentColor"/><circle cx="11" cy="8" r="1.5" fill="currentColor"/><circle cx="5" cy="12" r="1.5" fill="currentColor"/><circle cx="11" cy="12" r="1.5" fill="currentColor"/></svg>
+      <div class="card-inner">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <span class="card-lbl" style="margin:0">WiFi Insight</span>
+          <div class="band-chips">
+            <span class="bchip off">2.4G</span>
+            <span class="bchip on">5G</span>
+            <span class="bchip off">6G</span>
+          </div>
+        </div>
+        <canvas id="barChart" height="52" style="width:100%;display:block"></canvas>
+        <div style="display:flex;justify-content:space-between;margin-top:4px">
+          <span style="font-size:9px;color:#aeaeb2">8:00</span>
+          <span style="font-size:9px;color:#aeaeb2">14:00</span>
+          <span style="font-size:9px;color:#aeaeb2">20:00</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ping -->
+    <div class="card" id="mod-ping">
+      <div class="rm-btn" onclick="removeCard('mod-ping','ping')">−</div>
+      <svg class="drag-handle" width="16" height="16" viewBox="0 0 16 16"><circle cx="5" cy="4" r="1.5" fill="currentColor"/><circle cx="11" cy="4" r="1.5" fill="currentColor"/><circle cx="5" cy="8" r="1.5" fill="currentColor"/><circle cx="11" cy="8" r="1.5" fill="currentColor"/><circle cx="5" cy="12" r="1.5" fill="currentColor"/><circle cx="11" cy="12" r="1.5" fill="currentColor"/></svg>
+      <div class="card-inner">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <span class="card-lbl" style="margin:0">Network Latency</span>
+          <span style="font-size:11px;font-weight:700;color:#30d158;background:#e8faee;padding:2px 9px;border-radius:10px;border:.5px solid #34c759">Excellent</span>
+        </div>
+        <div style="display:flex;align-items:baseline;gap:4px;margin-bottom:4px">
+          <span style="font-size:32px;font-weight:800;color:#30d158;font-family:'JetBrains Mono',monospace">8</span>
+          <span style="font-size:13px;color:#8e8e93">ms avg</span>
+        </div>
+        <div class="ping-bar-row" id="pingBars"></div>
+        <div style="display:flex;justify-content:space-between;margin-top:4px">
+          <span style="font-size:9px;color:#aeaeb2">60s ago</span>
+          <span style="font-size:9px;color:#aeaeb2">now</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Parental Controls -->
+    <div class="card" id="mod-parental">
+      <div class="rm-btn" onclick="removeCard('mod-parental','parental')">−</div>
+      <svg class="drag-handle" width="16" height="16" viewBox="0 0 16 16"><circle cx="5" cy="4" r="1.5" fill="currentColor"/><circle cx="11" cy="4" r="1.5" fill="currentColor"/><circle cx="5" cy="8" r="1.5" fill="currentColor"/><circle cx="11" cy="8" r="1.5" fill="currentColor"/><circle cx="5" cy="12" r="1.5" fill="currentColor"/><circle cx="11" cy="12" r="1.5" fill="currentColor"/></svg>
+      <div class="card-inner">
+        <div class="paren-row">
+          <div class="paren-left">
+            <div class="paren-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.5 3.8 10.7 9 12 5.2-1.3 9-6.5 9-12V5l-9-4z" fill="none" stroke="#ff9f0a" stroke-width="1.5"/><path d="M9 12l2 2 4-4" stroke="#ff9f0a" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </div>
+            <div>
+              <div class="paren-name">Parental Controls</div>
+              <div class="paren-sub">2 profiles active</div>
+            </div>
+          </div>
+          <svg width="8" height="14" viewBox="0 0 8 14"><path d="M1 1l6 6-6 6" stroke="#aeaeb2" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="sec-lbl">Quick Actions</div>
+    <div class="card" id="mod-actions">
+      <div class="rm-btn" onclick="removeCard('mod-actions','actions')">−</div>
+      <svg class="drag-handle" width="16" height="16" viewBox="0 0 16 16"><circle cx="5" cy="4" r="1.5" fill="currentColor"/><circle cx="11" cy="4" r="1.5" fill="currentColor"/><circle cx="5" cy="8" r="1.5" fill="currentColor"/><circle cx="11" cy="8" r="1.5" fill="currentColor"/><circle cx="5" cy="12" r="1.5" fill="currentColor"/><circle cx="11" cy="12" r="1.5" fill="currentColor"/></svg>
+      <div class="card-inner" style="padding-bottom:14px">
+        <div class="act-grid">
+          <div class="act-btn"><div class="act-ico blue"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M12 4V1L8 5l4 4V6a6 6 0 1 1-6 6H4a8 8 0 1 0 8-8z" fill="#1a7fe8"/></svg></div><span class="act-lbl">Restart</span></div>
+          <div class="act-btn"><div class="act-ico green"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M16 11c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 3-1.34 3-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" fill="#30d158"/></svg></div><span class="act-lbl">Guest Network</span></div>
+          <div class="act-btn"><div class="act-ico orange"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2zm1 17.93V18a1 1 0 0 0-2 0v1.93A8 8 0 0 1 4.07 13H6a1 1 0 0 0 0-2H4.07A8 8 0 0 1 11 4.07V6a1 1 0 0 0 2 0V4.07A8 8 0 0 1 19.93 11H18a1 1 0 0 0 0 2h1.93A8 8 0 0 1 13 19.93z" fill="#ff9f0a"/></svg></div><span class="act-lbl">Diagnostics</span></div>
+          <div class="act-btn"><div class="act-ico red"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M1 6h22v2H1zm2 3h18l-1.5 9H4.5L3 9zm6 2v5h1v-5H9zm3 0v5h1v-5h-1zm3 0v5h1v-5h-1z" fill="#ff3b30"/></svg></div><span class="act-lbl">Clear Cache</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add modules section (edit mode only) -->
+    <div class="add-section" id="addSection">
+      <div class="add-title">Add Modules</div>
+      <div class="add-grid" id="addGrid"></div>
+    </div>
+
+    <div style="height:16px"></div>
+  </div>
+
+  <!-- Bottom Nav -->
+  <div class="bnav">
+    <div class="nav-it on">
+      <svg width="24" height="24" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" fill="#1a7fe8"/></svg>
+      <span class="nav-lbl" style="color:#1a7fe8">Home</span>
+    </div>
+    <div class="nav-it">
+      <div class="nav-wrap">
+        <svg width="24" height="24" viewBox="0 0 24 24"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-1V1h-2zm3 18H5V8h14v11z" fill="#aeaeb2"/></svg>
+        <div class="nav-bdg">15</div>
+      </div>
+      <span class="nav-lbl">Devices</span>
+    </div>
+    <div class="nav-it">
+      <svg width="24" height="24" viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z" fill="#aeaeb2"/></svg>
+      <span class="nav-lbl">Dashboard</span>
+    </div>
+    <div class="nav-it">
+      <svg width="24" height="24" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" fill="#aeaeb2"/></svg>
+      <span class="nav-lbl">SDN</span>
+    </div>
+    <div class="nav-it">
+      <svg width="24" height="24" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94s-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.49.49 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54A.484.484 0 0 0 14 2h-4c-.25 0-.46.18-.49.42l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87a.49.49 0 0 0 .12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.49.41h4c.25 0 .46-.18.49-.42l.36-2.54c.59-.24 1.13-.57 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32a.49.49 0 0 0-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z" fill="#aeaeb2"/></svg>
+      <span class="nav-lbl">Settings</span>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<script>
+// Module registry
+const modules = {
+  traffic:  { id:'mod-traffic',  label:'Live Traffic',      icon:'📶' },
+  clients:  { id:'mod-clients',  label:'Clients',           icon:'💻' },
+  netinfo:  { id:'mod-netinfo',  label:'Network Info',      icon:'🌐' },
+  bw:       { id:'mod-bw',       label:'Bandwidth Chart',   icon:'📈' },
+  system:   { id:'mod-system',   label:'System',            icon:'⚙️' },
+  wifi:     { id:'mod-wifi',     label:'WiFi Insight',      icon:'📡' },
+  ping:     { id:'mod-ping',     label:'Network Latency',   icon:'⚡' },
+  parental: { id:'mod-parental', label:'Parental Controls', icon:'🛡️' },
+  actions:  { id:'mod-actions',  label:'Quick Actions',     icon:'🔧' },
+};
+
+const hidden = new Set();
+let editMode = false;
+
+function enterEdit() {
+  editMode = true;
+  document.getElementById('scroll').classList.add('edit-mode');
+  document.getElementById('editBtn').style.display = 'none';
+  document.getElementById('doneBtn').style.display = 'block';
+  document.getElementById('addSection').classList.add('show');
+  renderAddGrid();
+}
+
+function exitEdit() {
+  editMode = false;
+  document.getElementById('scroll').classList.remove('edit-mode');
+  document.getElementById('editBtn').style.display = 'block';
+  document.getElementById('doneBtn').style.display = 'none';
+  document.getElementById('addSection').classList.remove('show');
+}
+
+function removeCard(id, key) {
+  const el = document.getElementById(id);
+  if (el) el.style.display = 'none';
+  hidden.add(key);
+  renderAddGrid();
+}
+
+function addCard(key) {
+  const m = modules[key];
+  const el = document.getElementById(m.id);
+  if (el) el.style.display = 'block';
+  hidden.delete(key);
+  renderAddGrid();
+}
+
+function renderAddGrid() {
+  const grid = document.getElementById('addGrid');
+  grid.innerHTML = '';
+  Object.entries(modules).forEach(([key, m]) => {
+    const chip = document.createElement('div');
+    chip.className = 'add-chip' + (hidden.has(key) ? '' : ' used');
+    chip.innerHTML = `<div class="add-chip-icon"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M8 3v10M3 8h10" stroke="#1a7fe8" stroke-width="2" stroke-linecap="round"/></svg></div>${m.label}`;
+    if (hidden.has(key)) chip.onclick = () => addCard(key);
+    grid.appendChild(chip);
+  });
+}
+
+// Draw charts
+function drawCharts() {
+  const tc = document.getElementById('tcChart');
+  if (tc && !tc._d) {
+    tc._d = true; tc.width = tc.offsetWidth;
+    const ctx = tc.getContext('2d'), W = tc.width, H = 70;
+    const dl = [20,25,32,38,45,40,32,28,22,30,48,65,58,50,54,60,68,72,62,54,46,38,28,20];
+    const ul = [8,11,15,20,24,21,16,13,10,15,26,34,30,25,28,32,36,40,32,28,23,18,13,8];
+    function ln(pts, col) {
+      const xs = W/(pts.length-1);
+      ctx.beginPath();
+      pts.forEach((v,i) => { const x=i*xs,y=H-(v/76)*(H-8)-4; i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); });
+      ctx.strokeStyle=col; ctx.lineWidth=2; ctx.lineJoin='round'; ctx.stroke();
+      ctx.lineTo(W,H); ctx.lineTo(0,H); ctx.closePath();
+      const g=ctx.createLinearGradient(0,0,0,H);
+      g.addColorStop(0,col+'28'); g.addColorStop(1,col+'00');
+      ctx.fillStyle=g; ctx.fill();
+    }
+    ln(dl,'#1a7fe8'); ln(ul,'#ff9f0a');
+  }
+
+  const bar = document.getElementById('barChart');
+  if (bar && !bar._d) {
+    bar._d = true; bar.width = bar.offsetWidth;
+    const ctx = bar.getContext('2d'), W=bar.width, H=52, bw=8, gap=2;
+    const vals=[15,20,18,28,24,32,26,38,34,30,42,36,28,24,20,26,32,38,34,42,46,38,30,24];
+    const sx=(W-vals.length*(bw+gap)+gap)/2;
+    vals.forEach((v,i)=>{
+      const x=sx+i*(bw+gap), h=Math.round((v/50)*(H-4));
+      ctx.fillStyle=`rgba(26,127,232,${(0.2+(v/50)*0.7).toFixed(2)})`;
+      ctx.beginPath(); ctx.roundRect(x,H-h,bw,h,3); ctx.fill();
+    });
+  }
+
+  const pb = document.getElementById('pingBars');
+  if (pb && !pb._d) {
+    pb._d = true;
+    const vals=[6,8,7,9,8,12,7,6,8,9,7,8,6,7,9,8,7,8,6,8,7,9,8,7,8,6,7,8,9,8];
+    vals.forEach(v => {
+      const b = document.createElement('div');
+      const h = Math.max(2, Math.round((v/14)*36));
+      const col = v<=9?'#30d158':v<=12?'#ff9f0a':'#ff3b30';
+      b.style.cssText = `flex:1;height:${h}px;background:${col};border-radius:2px 2px 0 0;opacity:0.8`;
+      pb.appendChild(b);
+    });
+  }
+}
+
+window.addEventListener('load', () => {
+  drawCharts();
+  scalePhone();
+});
+
+// Auto-scale
+function scalePhone() {
+  const wrap = document.getElementById('phoneWrap');
+  if (!wrap) return;
+  const scale = Math.min((window.innerHeight-40)/844, (window.innerWidth-40)/390, 1);
+  wrap.style.transform = `scale(${scale})`;
+}
+window.addEventListener('resize', scalePhone);
+</script>
+</body>
+</html>
